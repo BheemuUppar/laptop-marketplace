@@ -1,0 +1,33 @@
+<section class="section-padding">
+  <div class="container-custom">
+    <div class="mb-10">
+      <h1 class="heading-2 mb-2">Browse Laptops</h1>
+      <p class="text-text-secondary">Find the perfect refurbished laptop from our curated inventory</p>
+    </div>
+
+    <div class="grid lg:grid-cols-4 gap-8">
+      <aside class="lg:col-span-1">
+        <app-filter-panel [filter]="filter()" (filterChange)="onFilterChange($event)" />
+      </aside>
+
+      <div class="lg:col-span-3">
+        @if (loading()) {
+          <app-skeleton-loader type="card" [count]="6" />
+        } @else if (products().length === 0) {
+          <app-empty-state
+            icon="laptop_mac"
+            title="No laptops found"
+            message="Try adjusting your filters or browse all brands."
+          />
+        } @else {
+          <p class="text-sm text-text-secondary mb-6">{{ products().length }} laptop(s) found</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            @for (product of products(); track product.id) {
+              <app-product-card [product]="product" />
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

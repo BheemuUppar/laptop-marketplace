@@ -1,0 +1,152 @@
+<div class="space-y-4">
+  <!-- Main carousel -->
+  <div
+    class="relative aspect-[4/3] rounded-2xl bg-surface dark:bg-slate-700 group"
+    [class.overflow-hidden]="!zoomed()"
+    [class.overflow-auto]="zoomed()"
+    (touchstart)="onTouchStart($event)"
+    (touchend)="onTouchEnd($event)"
+  >
+    <img
+      [src]="images()[selectedIndex()]"
+      [alt]="alt()"
+      loading="eager"
+      class="w-full h-full object-contain bg-white dark:bg-slate-800 transition-transform duration-300 ease-out origin-center"
+      [class.gallery-zoomed]="zoomed()"
+      [class.cursor-zoom-in]="!zoomed()"
+      [class.cursor-zoom-out]="zoomed()"
+      (click)="toggleZoom($event)"
+    />
+
+    @if (hasMultiple) {
+      <button
+        type="button"
+        (click)="prev(); $event.stopPropagation()"
+        class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 dark:bg-slate-800/90 rounded-full flex items-center justify-center shadow-soft opacity-0 group-hover:opacity-100 transition-opacity"
+        aria-label="Previous image"
+      >
+        <span class="material-icons">chevron_left</span>
+      </button>
+      <button
+        type="button"
+        (click)="next(); $event.stopPropagation()"
+        class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 dark:bg-slate-800/90 rounded-full flex items-center justify-center shadow-soft opacity-0 group-hover:opacity-100 transition-opacity"
+        aria-label="Next image"
+      >
+        <span class="material-icons">chevron_right</span>
+      </button>
+
+      <span class="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/50 text-white text-xs font-medium">
+        {{ counter }}
+      </span>
+    }
+
+    <div class="absolute top-3 right-3 flex gap-2">
+      <button
+        type="button"
+        (click)="toggleZoom($event)"
+        class="w-9 h-9 bg-white/90 dark:bg-slate-800/90 rounded-full flex items-center justify-center shadow-soft hover:bg-white transition-colors"
+        [attr.aria-label]="zoomed() ? 'Zoom out' : 'Zoom in'"
+      >
+        <span class="material-icons text-lg">{{ zoomed() ? 'zoom_out' : 'zoom_in' }}</span>
+      </button>
+      <button
+        type="button"
+        (click)="openFullscreen($event)"
+        class="w-9 h-9 bg-white/90 dark:bg-slate-800/90 rounded-full flex items-center justify-center shadow-soft hover:bg-white transition-colors"
+        aria-label="View fullscreen"
+      >
+        <span class="material-icons text-lg">fullscreen</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Thumbnails -->
+  @if (hasMultiple) {
+    <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+      @for (img of images(); track $index) {
+        <button
+          type="button"
+          (click)="selectImage($index)"
+          class="flex-shrink-0 w-20 h-16 rounded-xl overflow-hidden border-2 transition-all hover:border-primary/50"
+          [class.border-primary]="selectedIndex() === $index"
+          [class.border-transparent]="selectedIndex() !== $index"
+          [class.thumbnail-selected]="selectedIndex() === $index"
+        >
+          <img [src]="img" [alt]="alt() + ' thumbnail ' + ($index + 1)" class="w-full h-full object-cover" loading="lazy" />
+        </button>
+      }
+    </div>
+  }
+</div>
+
+<!-- Fullscreen lightbox -->
+@if (fullscreen()) {
+  <div
+    class="fixed inset-0 z-[100] bg-black/95 flex flex-col"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Image gallery fullscreen"
+  >
+    <div class="flex items-center justify-between p-4 text-white">
+      <span class="text-sm font-medium">{{ counter }}</span>
+      <div class="flex items-center gap-2">
+        <button type="button" (click)="toggleZoom()" class="p-2 rounded-lg hover:bg-white/10" [attr.aria-label]="zoomed() ? 'Zoom out' : 'Zoom in'">
+          <span class="material-icons">{{ zoomed() ? 'zoom_out' : 'zoom_in' }}</span>
+        </button>
+        <button type="button" (click)="closeFullscreen()" class="p-2 rounded-lg hover:bg-white/10" aria-label="Close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="flex-1 relative flex items-center justify-center overflow-auto px-4"
+      (touchstart)="onTouchStart($event)"
+      (touchend)="onTouchEnd($event)"
+    >
+      <img
+        [src]="images()[selectedIndex()]"
+        [alt]="alt()"
+        class="max-h-[75vh] max-w-full object-contain transition-transform duration-300"
+        [class.gallery-zoomed]="zoomed()"
+        [class.cursor-zoom-in]="!zoomed()"
+        [class.cursor-zoom-out]="zoomed()"
+        (click)="toggleZoom($event)"
+      />
+
+      @if (hasMultiple) {
+        <button
+          type="button"
+          (click)="prev()"
+          class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white"
+        >
+          <span class="material-icons text-3xl">chevron_left</span>
+        </button>
+        <button
+          type="button"
+          (click)="next()"
+          class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white"
+        >
+          <span class="material-icons text-3xl">chevron_right</span>
+        </button>
+      }
+    </div>
+
+    @if (hasMultiple) {
+      <div class="p-4 flex gap-2 justify-center overflow-x-auto">
+        @for (img of images(); track $index) {
+          <button
+            type="button"
+            (click)="selectImage($index)"
+            class="flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all"
+            [class.border-primary]="selectedIndex() === $index"
+            [class.border-white/30]="selectedIndex() !== $index"
+          >
+            <img [src]="img" [alt]="'Thumbnail ' + ($index + 1)" class="w-full h-full object-cover" />
+          </button>
+        }
+      </div>
+    }
+  </div>
+}

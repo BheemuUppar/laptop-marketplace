@@ -1,0 +1,13 @@
+<div class="flex items-center gap-0.5">
+  @for (star of stars; track star) {
+    <span
+      class="material-icons"
+      [class.text-sm]="size() === 'sm'"
+      [class.text-lg]="size() === 'md'"
+      [class.text-warning]="star <= rating()"
+      [class.text-border]="star > rating()"
+    >
+      star
+    </span>
+  }
+</div>

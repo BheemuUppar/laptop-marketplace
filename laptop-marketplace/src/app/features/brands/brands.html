@@ -1,0 +1,32 @@
+<section class="section-padding">
+  <div class="container-custom">
+    <div class="text-center mb-12">
+      <h1 class="heading-2 mb-4">Shop by Brand</h1>
+      <p class="text-text-secondary max-w-2xl mx-auto">
+        Choose from top laptop brands. Every device is professionally tested and comes with warranty.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (brand of brands; track brand.id) {
+        <a
+          [routerLink]="['/laptops']"
+          [queryParams]="{ brand: brand.name }"
+          class="card-hover p-8 flex flex-col items-center gap-4 text-center group"
+        >
+          <div class="w-24 h-24 bg-surface dark:bg-slate-700 rounded-2xl flex items-center justify-center p-4">
+            <img [src]="brand.logo" [alt]="brand.name" class="h-10 object-contain dark:invert" loading="lazy" />
+          </div>
+          <div>
+            <h2 class="heading-3 mb-1 group-hover:text-primary transition-colors">{{ brand.name }}</h2>
+            <p class="text-text-secondary text-sm">Browse {{ brand.name }} laptops</p>
+          </div>
+          <span class="text-primary text-sm font-semibold flex items-center gap-1">
+            Browse {{ brand.name }}
+            <span class="material-icons text-base">arrow_forward</span>
+          </span>
+        </a>
+      }
+    </div>
+  </div>
+</section>

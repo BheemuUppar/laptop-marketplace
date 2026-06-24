@@ -1,0 +1,107 @@
+<div>
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-text-primary dark:text-white mb-2">Dashboard</h1>
+    <p class="text-text-secondary text-sm">iPro Technologies inventory overview</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-text-secondary text-sm">Total Products</span>
+        <span class="material-icons text-primary bg-primary/10 p-2 rounded-lg text-xl">inventory_2</span>
+      </div>
+      <p class="text-3xl font-bold">{{ totalProducts() }}</p>
+      <p class="text-xs text-text-secondary mt-1">{{ availableProducts() }} available</p>
+    </div>
+
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-text-secondary text-sm">Low Stock</span>
+        <span class="material-icons text-warning bg-warning/10 p-2 rounded-lg text-xl">warning</span>
+      </div>
+      <p class="text-3xl font-bold text-warning">{{ lowStockProducts() }}</p>
+      <a routerLink="/admin/inventory" class="text-xs text-primary hover:underline mt-1 inline-block">View inventory</a>
+    </div>
+
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-text-secondary text-sm">Out of Stock</span>
+        <span class="material-icons text-danger bg-danger/10 p-2 rounded-lg text-xl">remove_shopping_cart</span>
+      </div>
+      <p class="text-3xl font-bold text-danger">{{ outOfStockProducts() }}</p>
+      <a routerLink="/admin/inventory" class="text-xs text-primary hover:underline mt-1 inline-block">Manage stock</a>
+    </div>
+
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-text-secondary text-sm">Inquiries</span>
+        <span class="material-icons text-primary bg-primary/10 p-2 rounded-lg text-xl">contact_mail</span>
+      </div>
+      <p class="text-3xl font-bold">{{ totalInquiries() }}</p>
+      <p class="text-xs text-text-secondary mt-1">{{ newInquiries() }} new</p>
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <h2 class="font-bold mb-4">Review Summary</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-text-secondary text-sm">Total Reviews</span>
+          <span class="material-icons text-primary bg-primary/10 p-2 rounded-lg text-xl">rate_review</span>
+        </div>
+        <p class="text-3xl font-bold">{{ reviewStats().total }}</p>
+      </div>
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-text-secondary text-sm">Visible</span>
+          <span class="material-icons text-success bg-success/10 p-2 rounded-lg text-xl">visibility</span>
+        </div>
+        <p class="text-3xl font-bold text-success">{{ reviewStats().visible }}</p>
+      </div>
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-text-secondary text-sm">Featured</span>
+          <span class="material-icons text-warning bg-warning/10 p-2 rounded-lg text-xl">star</span>
+        </div>
+        <p class="text-3xl font-bold text-warning">{{ reviewStats().featured }}</p>
+      </div>
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-text-secondary text-sm">Hidden</span>
+          <span class="material-icons text-text-secondary bg-surface p-2 rounded-lg text-xl">visibility_off</span>
+        </div>
+        <p class="text-3xl font-bold">{{ reviewStats().hidden }}</p>
+        <a routerLink="/admin/reviews" class="text-xs text-primary hover:underline mt-1 inline-block">Manage reviews</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="card p-6">
+      <h2 class="font-bold mb-4">Customer Inquiries</h2>
+      <div class="flex items-end gap-4 mb-4">
+        <div>
+          <p class="text-3xl font-bold">{{ totalInquiries() }}</p>
+          <p class="text-sm text-text-secondary">Total inquiries</p>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">{{ newInquiries() }}</p>
+          <p class="text-sm text-text-secondary">Awaiting response</p>
+        </div>
+      </div>
+      <a routerLink="/admin/inquiries" class="btn-outline text-sm py-2">Manage Inquiries</a>
+    </div>
+
+    <div class="card p-6">
+      <h2 class="font-bold mb-4">Quick Actions</h2>
+      <div class="grid grid-cols-2 gap-3">
+        <a routerLink="/admin/products" class="btn-secondary text-sm py-2.5 text-center">Add Product</a>
+        <a routerLink="/admin/inventory" class="btn-secondary text-sm py-2.5 text-center">Update Stock</a>
+        <a routerLink="/admin/inquiries" class="btn-secondary text-sm py-2.5 text-center">View Inquiries</a>
+        <a routerLink="/admin/reviews" class="btn-secondary text-sm py-2.5 text-center">Manage Reviews</a>
+        <a routerLink="/" class="btn-secondary text-sm py-2.5 text-center">View Store</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+.testimonial-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+}

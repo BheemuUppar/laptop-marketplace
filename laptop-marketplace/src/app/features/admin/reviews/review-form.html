@@ -1,0 +1,88 @@
+<div class="max-w-3xl">
+  <div class="mb-6">
+    <a mat-button routerLink="/admin/reviews">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Reviews
+    </a>
+    <h1 class="text-2xl font-bold mt-2">{{ isEdit() ? 'Edit Review' : 'Add Review' }}</h1>
+  </div>
+
+  @if (loading()) {
+    <div class="flex justify-center py-20">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <mat-card>
+      <mat-card-content class="!p-6">
+        <form [formGroup]="form" (ngSubmit)="save()" class="grid gap-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Customer Name</mat-label>
+            <input matInput formControlName="customerName" />
+            @if (isInvalid('customerName')) {
+              <mat-error>Customer name is required (min 2 characters)</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Customer Role</mat-label>
+              <input matInput formControlName="customerRole" placeholder="e.g. Software Developer" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Customer Company</mat-label>
+              <input matInput formControlName="customerCompany" placeholder="Optional" />
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Customer Image URL</mat-label>
+            <input matInput formControlName="customerImage" placeholder="https://..." />
+          </mat-form-field>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Rating</mat-label>
+              <mat-select formControlName="rating">
+                @for (r of ratings; track r) {
+                  <mat-option [value]="r">{{ r }} Star{{ r > 1 ? 's' : '' }}</mat-option>
+                }
+              </mat-select>
+              @if (isInvalid('rating')) {
+                <mat-error>Rating is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Display Order</mat-label>
+              <input matInput type="number" formControlName="displayOrder" min="0" />
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Review Text</mat-label>
+            <textarea matInput formControlName="reviewText" rows="5"></textarea>
+            @if (isInvalid('reviewText')) {
+              <mat-error>Review text is required (min 10 characters)</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="flex flex-wrap gap-6">
+            <mat-slide-toggle formControlName="isVisible">Visible on website</mat-slide-toggle>
+            <mat-slide-toggle formControlName="isFeatured">Featured testimonial</mat-slide-toggle>
+          </div>
+
+          <div class="flex gap-3 pt-4">
+            <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+              }
+              Save
+            </button>
+            <a mat-stroked-button routerLink="/admin/reviews">Cancel</a>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

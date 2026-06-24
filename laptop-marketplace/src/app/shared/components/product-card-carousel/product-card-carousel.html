@@ -1,0 +1,49 @@
+<div
+  class="relative aspect-[4/3] overflow-hidden bg-surface dark:bg-slate-700 group"
+  (touchstart)="onTouchStart($event)"
+  (touchend)="onTouchEnd($event)"
+>
+  <img
+    [src]="images()[index()]"
+    [alt]="alt()"
+    loading="lazy"
+    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+  />
+
+  @if (hasMultiple) {
+    <button
+      type="button"
+      (click)="prev($event)"
+      class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 dark:bg-slate-800/90 rounded-full flex items-center justify-center shadow-soft opacity-0 group-hover:opacity-100 transition-opacity z-10"
+      aria-label="Previous photo"
+    >
+      <span class="material-icons text-sm">chevron_left</span>
+    </button>
+    <button
+      type="button"
+      (click)="next($event)"
+      class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 dark:bg-slate-800/90 rounded-full flex items-center justify-center shadow-soft opacity-0 group-hover:opacity-100 transition-opacity z-10"
+      aria-label="Next photo"
+    >
+      <span class="material-icons text-sm">chevron_right</span>
+    </button>
+
+    <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/50 text-white text-[10px] font-medium z-10">
+      {{ index() + 1 }}/{{ images().length }}
+    </span>
+
+    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+      @for (img of images(); track $index) {
+        <button
+          type="button"
+          (click)="goTo($event, $index)"
+          class="w-1.5 h-1.5 rounded-full transition-all"
+          [class.bg-white]="index() === $index"
+          [class.bg-white/40]="index() !== $index"
+          [class.w-3]="index() === $index"
+          [attr.aria-label]="'Photo ' + ($index + 1)"
+        ></button>
+      }
+    </div>
+  }
+</div>

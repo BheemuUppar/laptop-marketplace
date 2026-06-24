@@ -1,0 +1,103 @@
+<section class="section-padding">
+  <div class="container-custom">
+    @if (loading()) {
+      <app-skeleton-loader type="card" [count]="1" />
+    } @else if (!product()) {
+      <app-empty-state
+        icon="laptop_mac"
+        title="Product Not Found"
+        message="This laptop may have been sold or removed from our inventory."
+      />
+      <div class="text-center mt-4">
+        <a routerLink="/laptops" class="btn-primary">Browse Available Laptops</a>
+      </div>
+    } @else {
+      <nav class="text-sm text-text-secondary mb-8">
+        <a routerLink="/laptops" class="hover:text-primary">Laptops</a>
+        <span class="mx-2">/</span>
+        <span class="text-text-primary dark:text-white">{{ product()!.brand }} {{ product()!.model }}</span>
+      </nav>
+
+      <div class="grid lg:grid-cols-2 gap-12 mb-16">
+        @if (product()!.images.length) {
+          <app-image-gallery [images]="product()!.images" [alt]="product()!.brand + ' ' + product()!.model" />
+        } @else {
+          <div class="aspect-[4/3] rounded-2xl bg-surface dark:bg-slate-700 flex items-center justify-center">
+            <span class="material-icons text-6xl text-text-secondary/30">laptop_mac</span>
+          </div>
+        }
+
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span class="text-sm font-semibold text-primary uppercase tracking-wide">{{ product()!.brand }}</span>
+            <span [class]="stockClass">{{ stockLabel }}</span>
+            <span class="badge bg-surface dark:bg-slate-700 text-text-secondary">{{ product()!.condition }}</span>
+            @if (product()!.featured) {
+              <span class="badge bg-primary/10 text-primary">Featured</span>
+            }
+            @if (product()!.warrantyMonths > 0) {
+              <span class="badge-success">{{ product()!.warrantyMonths }} Month Warranty</span>
+            }
+          </div>
+
+          <h1 class="heading-2 mb-4">{{ product()!.model }}</h1>
+          <p class="text-text-secondary mb-6">{{ product()!.description }}</p>
+
+          <div class="flex items-end gap-3 mb-8">
+            @if (hasDiscount) {
+              <span class="text-lg text-text-secondary line-through">{{ product()!.originalPrice | currency:'INR':'symbol':'1.0-0' }}</span>
+            }
+            <span class="text-3xl font-bold text-primary">{{ displayPrice | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="card p-4">
+              <span class="text-xs text-text-secondary block mb-1">Processor</span>
+              <span class="font-semibold text-sm">{{ product()!.processor }} {{ product()!.generation }}</span>
+            </div>
+            <div class="card p-4">
+              <span class="text-xs text-text-secondary block mb-1">RAM</span>
+              <span class="font-semibold text-sm">{{ product()!.ram }}</span>
+            </div>
+            <div class="card p-4">
+              <span class="text-xs text-text-secondary block mb-1">Storage</span>
+              <span class="font-semibold text-sm">{{ product()!.storage }}</span>
+            </div>
+            <div class="card p-4">
+              <span class="text-xs text-text-secondary block mb-1">Graphics</span>
+              <span class="font-semibold text-sm">{{ product()!.graphics || 'Integrated' }}</span>
+            </div>
+            <div class="card p-4">
+              <span class="text-xs text-text-secondary block mb-1">Display</span>
+              <span class="font-semibold text-sm">{{ product()!.displaySize }}</span>
+            </div>
+            <div class="card p-4">
+              <span class="text-xs text-text-secondary block mb-1">Battery Health</span>
+              <span class="font-semibold text-sm">{{ product()!.batteryHealth }}%</span>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <button (click)="whatsappInquiry()" class="btn-primary flex-1 min-w-[140px]" [disabled]="product()!.stockStatus === 'out_of_stock'">
+              WhatsApp Inquiry
+            </button>
+            <button (click)="callStore()" class="btn-secondary flex-1 min-w-[140px]">
+              <span class="material-icons text-base">phone</span> Call Store
+            </button>
+          </div>
+        </div>
+      </div>
+
+      @if (relatedProducts().length > 0) {
+        <div>
+          <h2 class="heading-2 mb-8">Similar Laptops</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            @for (related of relatedProducts(); track related.id) {
+              <app-product-card [product]="related" />
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+</section>

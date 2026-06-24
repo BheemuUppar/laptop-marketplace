@@ -1,0 +1,190 @@
+<div>
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-text-primary dark:text-white mb-1">Products</h1>
+      <p class="text-text-secondary text-sm">Add and manage your laptop inventory</p>
+    </div>
+    <button (click)="openAddModal()" class="btn-primary text-sm py-2.5">
+      <span class="material-icons text-base">add</span> Add Product
+    </button>
+  </div>
+
+  <div class="card p-4 mb-6">
+    <input type="text" class="input-field" placeholder="Search by brand or model..." (input)="onSearch($event)" />
+  </div>
+
+  @if (loading()) {
+    <div class="card p-8 text-center text-text-secondary">Loading products...</div>
+  } @else if (!products().length) {
+    <div class="card p-12 text-center">
+      <span class="material-icons text-5xl text-text-secondary/30 mb-4">inventory_2</span>
+      <h3 class="font-bold text-lg mb-2">No products yet</h3>
+      <p class="text-text-secondary text-sm mb-6">Start by adding your first laptop to the inventory.</p>
+      <button (click)="openAddModal()" class="btn-primary text-sm">Add First Product</button>
+    </div>
+  } @else {
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-surface dark:bg-slate-700/50">
+            <tr>
+              <th class="text-left p-4 font-semibold">Product</th>
+              <th class="text-left p-4 font-semibold">Price</th>
+              <th class="text-left p-4 font-semibold">Stock</th>
+              <th class="text-left p-4 font-semibold">Available</th>
+              <th class="text-right p-4 font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of filteredProducts(); track product.id) {
+              <tr class="border-t border-border hover:bg-surface/50">
+                <td class="p-4">
+                  <div class="flex items-center gap-3">
+                    @if (product.images[0]) {
+                      <img [src]="product.images[0]" [alt]="product.model" class="w-12 h-10 object-cover rounded-lg" />
+                    } @else {
+                      <div class="w-12 h-10 bg-surface rounded-lg flex items-center justify-center">
+                        <span class="material-icons text-text-secondary text-sm">laptop_mac</span>
+                      </div>
+                    }
+                    <div>
+                      <p class="font-semibold">{{ product.brand }} {{ product.model }}</p>
+                      <p class="text-xs text-text-secondary">{{ product.processor }} · {{ product.ram }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-4 font-semibold">{{ product.sellingPrice | currency:'INR':'symbol':'1.0-0' }}</td>
+                <td class="p-4"><span [class]="stockBadgeClass(product.stockStatus)">{{ product.quantityAvailable }}</span></td>
+                <td class="p-4">
+                  <span [class]="product.isAvailable ? 'badge-success' : 'badge-danger'">
+                    {{ product.isAvailable ? 'Yes' : 'No' }}
+                  </span>
+                </td>
+                <td class="p-4 text-right whitespace-nowrap">
+                  <button (click)="openEditModal(product)" class="text-primary hover:underline mr-2">Edit</button>
+                  <button (click)="markSold(product.id)" class="text-warning hover:underline mr-2">Sold</button>
+                  <button (click)="toggleAvailability(product.id)" class="text-text-secondary hover:underline mr-2">Toggle</button>
+                  <button (click)="deleteProduct(product.id)" class="text-danger hover:underline">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+
+@if (showModal()) {
+  <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" (click)="closeModal()">
+    <div class="card p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+      <h2 class="text-xl font-bold mb-6">{{ editingId() ? 'Edit Product' : 'Add Product' }}</h2>
+
+      @if (saveError()) {
+        <div class="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm">{{ saveError() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="saveProduct()" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Brand *</label>
+          <select formControlName="brand" class="input-field text-sm" [class.border-danger]="isInvalid('brand')">
+            <option value="">Select brand</option>
+            @for (b of options.brands; track b) { <option [value]="b">{{ b }}</option> }
+          </select>
+          @if (isInvalid('brand')) { <p class="text-danger text-xs mt-1">Brand is required</p> }
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Model *</label>
+          <input formControlName="model" class="input-field text-sm" [class.border-danger]="isInvalid('model')" />
+          @if (isInvalid('model')) { <p class="text-danger text-xs mt-1">Model is required</p> }
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Processor *</label>
+          <input formControlName="processor" class="input-field text-sm" [class.border-danger]="isInvalid('processor')" />
+          @if (isInvalid('processor')) { <p class="text-danger text-xs mt-1">Processor is required</p> }
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Generation</label>
+          <input formControlName="generation" class="input-field text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">RAM *</label>
+          <select formControlName="ram" class="input-field text-sm">
+            @for (r of options.ram; track r) { <option [value]="r">{{ r }}</option> }
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Storage *</label>
+          <select formControlName="storage" class="input-field text-sm">
+            @for (s of options.storage; track s) { <option [value]="s">{{ s }}</option> }
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Graphics</label>
+          <input formControlName="graphics" class="input-field text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Display Size *</label>
+          <input formControlName="displaySize" class="input-field text-sm" placeholder='e.g. 14" FHD' [class.border-danger]="isInvalid('displaySize')" />
+          @if (isInvalid('displaySize')) { <p class="text-danger text-xs mt-1">Display size is required</p> }
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Battery Health (%)</label>
+          <input type="number" formControlName="batteryHealth" class="input-field text-sm" min="0" max="100" placeholder="85" [class.border-danger]="isInvalid('batteryHealth')" />
+          @if (isInvalid('batteryHealth')) { <p class="text-danger text-xs mt-1">Enter a value between 0 and 100</p> }
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Condition *</label>
+          <select formControlName="condition" class="input-field text-sm">
+            @for (c of options.conditions; track c) { <option [value]="c">{{ c }}</option> }
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Warranty (months)</label>
+          <input type="number" formControlName="warrantyMonths" class="input-field text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Selling Price (₹) *</label>
+          <input type="number" formControlName="sellingPrice" class="input-field text-sm" min="1" placeholder="e.g. 32999" [class.border-danger]="isInvalid('sellingPrice')" />
+          @if (isInvalid('sellingPrice')) { <p class="text-danger text-xs mt-1">Enter a valid price (min ₹1)</p> }
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Original Price (₹)</label>
+          <input type="number" formControlName="originalPrice" class="input-field text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Quantity *</label>
+          <input type="number" formControlName="quantityAvailable" class="input-field text-sm" />
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-sm font-medium mb-1">Description</label>
+          <textarea formControlName="description" rows="3" class="input-field text-sm"></textarea>
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-sm font-medium mb-1">Product Images</label>
+          <input type="file" accept="image/*" multiple (change)="onFilesSelected($event)" class="input-field text-sm" />
+          @if (imagePreview().length) {
+            <div class="flex flex-wrap gap-2 mt-3">
+              @for (img of imagePreview(); track $index) {
+                <div class="relative">
+                  <img [src]="img" class="w-20 h-16 object-cover rounded-lg" />
+                  <button type="button" (click)="removeImage($index)" class="absolute -top-1 -right-1 w-5 h-5 bg-danger text-white rounded-full text-xs">×</button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+        <div class="sm:col-span-2 flex gap-6">
+          <label class="flex items-center gap-2 text-sm"><input type="checkbox" formControlName="featured" /> Featured</label>
+          <label class="flex items-center gap-2 text-sm"><input type="checkbox" formControlName="isAvailable" /> Available</label>
+        </div>
+        <div class="sm:col-span-2 flex gap-3 pt-2">
+          <button type="submit" class="btn-primary flex-1" [disabled]="saving() || uploading()">
+            {{ uploading() ? 'Uploading...' : saving() ? 'Saving...' : editingId() ? 'Update' : 'Add Product' }}
+          </button>
+          <button type="button" (click)="closeModal()" class="btn-secondary flex-1">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

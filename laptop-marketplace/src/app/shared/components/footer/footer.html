@@ -1,0 +1,74 @@
+<footer class="bg-secondary text-slate-300">
+  <div class="container-custom section-padding !py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <!-- Brand -->
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+            <span class="material-icons text-white">laptop_mac</span>
+          </div>
+          <span class="text-xl font-bold text-white">iPro Technologies</span>
+        </div>
+        <p class="text-sm text-slate-400 leading-relaxed">
+          Used and refurbished laptops in HSR Layout, Bengaluru. Dell, HP, Lenovo, Apple, Asus.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-white font-semibold mb-4">Quick Links</h4>
+        <ul class="space-y-2">
+          @for (link of quickLinks; track link.path) {
+            <li>
+              <a [routerLink]="link.path" class="text-sm text-slate-400 hover:text-white transition-colors">
+                {{ link.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h4 class="text-white font-semibold mb-4">Contact Us</h4>
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-start gap-2">
+            <span class="material-icons text-primary text-base mt-0.5">location_on</span>
+            <span>{{ store.address }}, {{ store.city }}</span>
+          </li>
+          @for (phone of store.phones; track phone) {
+            <li class="flex items-center gap-2">
+              <span class="material-icons text-primary text-base">phone</span>
+              <a [href]="'tel:+91' + phone" class="hover:text-white transition-colors">+91 {{ phone }}</a>
+            </li>
+          }
+          <li class="flex items-center gap-2">
+            <span class="material-icons text-primary text-base">email</span>
+            <a [href]="'mailto:' + store.email" class="hover:text-white transition-colors">{{ store.email }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Hours -->
+      <div>
+        <h4 class="text-white font-semibold mb-4">Business Hours</h4>
+        <ul class="space-y-2 text-sm">
+          @for (hours of store.businessHours; track hours.day) {
+            <li class="flex justify-between">
+              <span class="text-slate-400">{{ hours.day }}</span>
+              <span>{{ hours.open }} - {{ hours.close }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-slate-700 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-slate-500">&copy; {{ currentYear }} iPro Technologies. All rights reserved.</p>
+      <div class="flex gap-4 text-sm text-slate-500">
+        <span>Privacy Policy</span>
+        <span>Terms of Service</span>
+      </div>
+    </div>
+  </div>
+</footer>

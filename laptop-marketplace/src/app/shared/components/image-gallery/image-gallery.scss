@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.gallery-zoomed {
+  transform: scale(2.5);
+}
+
+.thumbnail-selected {
+  @apply ring-2 ring-primary/20;
+}

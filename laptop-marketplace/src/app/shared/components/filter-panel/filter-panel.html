@@ -1,0 +1,88 @@
+<div class="card p-5 space-y-5">
+  <div class="flex items-center justify-between">
+    <h3 class="font-bold text-text-primary dark:text-white">Filters</h3>
+    <button (click)="clearFilters()" class="text-sm text-primary hover:underline">Clear All</button>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Search Model</label>
+    <input
+      type="text"
+      [ngModel]="filter().search ?? ''"
+      (ngModelChange)="update('search', $event)"
+      class="input-field text-sm"
+      placeholder="Search by model..."
+    />
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Brand</label>
+    <select [ngModel]="filter().brand ?? ''" (ngModelChange)="update('brand', $event)" class="input-field text-sm">
+      <option value="">All Brands</option>
+      @for (brand of options.brands; track brand) {
+        <option [value]="brand">{{ brand }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Processor</label>
+    <select [ngModel]="filter().processor ?? ''" (ngModelChange)="update('processor', $event)" class="input-field text-sm">
+      <option value="">All Processors</option>
+      @for (proc of options.processors; track proc) {
+        <option [value]="proc">{{ proc }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">RAM</label>
+    <select [ngModel]="filter().ram ?? ''" (ngModelChange)="update('ram', $event)" class="input-field text-sm">
+      <option value="">All RAM</option>
+      @for (ram of options.ram; track ram) {
+        <option [value]="ram">{{ ram }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Storage</label>
+    <select [ngModel]="filter().storage ?? ''" (ngModelChange)="update('storage', $event)" class="input-field text-sm">
+      <option value="">All Storage</option>
+      @for (storage of options.storage; track storage) {
+        <option [value]="storage">{{ storage }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Condition</label>
+    <select [ngModel]="filter().condition ?? ''" (ngModelChange)="update('condition', $event)" class="input-field text-sm">
+      <option value="">All Conditions</option>
+      @for (cond of options.conditions; track cond) {
+        <option [value]="cond">{{ cond }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Availability</label>
+    <select [ngModel]="filter().availability ?? ''" (ngModelChange)="update('availability', $event)" class="input-field text-sm">
+      <option value="">All</option>
+      <option value="in_stock">In Stock</option>
+      <option value="low_stock">Low Stock</option>
+      <option value="out_of_stock">Out of Stock</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Sort By</label>
+    <select [ngModel]="filter().sortBy ?? ''" (ngModelChange)="update('sortBy', $event)" class="input-field text-sm">
+      <option value="">Default</option>
+      <option value="price_asc">Price: Low to High</option>
+      <option value="price_desc">Price: High to Low</option>
+      <option value="newest">Newest</option>
+      <option value="popular">Popular</option>
+    </select>
+  </div>
+</div>

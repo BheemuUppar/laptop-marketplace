@@ -1,0 +1,43 @@
+<div class="min-h-screen bg-surface dark:bg-secondary flex">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white dark:bg-slate-800 border-r border-border flex flex-col fixed h-full z-40">
+    <div class="p-6 border-b border-border">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+          <span class="material-icons text-white text-sm">laptop_mac</span>
+        </div>
+        <div>
+          <span class="font-bold text-text-primary dark:text-white text-sm">iPro</span>
+          <span class="block text-xs text-text-secondary">Admin Panel</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="flex-1 p-4 space-y-1">
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="bg-primary/10 text-primary"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-text-secondary hover:bg-primary/5 hover:text-primary transition-all"
+        >
+          <span class="material-icons text-xl">{{ item.icon }}</span>
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    <div class="p-4 border-t border-border">
+      <a routerLink="/" class="flex items-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-primary transition-colors mb-2">
+        <span class="material-icons text-base">storefront</span> View Store
+      </a>
+      <button (click)="logout()" class="flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger/5 rounded-lg w-full transition-colors">
+        <span class="material-icons text-base">logout</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 ml-64 p-8">
+    <router-outlet />
+  </main>
+</div>

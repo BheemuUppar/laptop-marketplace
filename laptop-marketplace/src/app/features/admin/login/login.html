@@ -1,0 +1,58 @@
+<div class="min-h-screen flex items-center justify-center bg-surface dark:bg-secondary p-4">
+  <div class="card p-8 w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <span class="material-icons text-white text-2xl">laptop_mac</span>
+      </div>
+      <h1 class="heading-3 mb-2">Admin Login</h1>
+      <p class="text-text-secondary text-sm">Sign in to manage iPro Technologies</p>
+    </div>
+
+    @if (error()) {
+      <div class="bg-danger/10 text-danger text-sm p-3 rounded-xl mb-6">{{ error() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
+      <div>
+        <label class="block text-sm font-medium mb-2">Username</label>
+        <input
+          type="text"
+          formControlName="username"
+          class="input-field"
+          placeholder="admin"
+          [class.border-danger]="isInvalid('username')"
+        />
+        @if (isInvalid('username')) {
+          <p class="text-danger text-xs mt-1">Username is required</p>
+        }
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-2">Password</label>
+        <input
+          type="password"
+          formControlName="password"
+          class="input-field"
+          placeholder="••••••••"
+          [class.border-danger]="isInvalid('password')"
+        />
+        @if (isInvalid('password')) {
+          <p class="text-danger text-xs mt-1">Password is required</p>
+        }
+      </div>
+
+      <label class="flex items-center gap-2 text-sm cursor-pointer">
+        <input type="checkbox" formControlName="rememberMe" class="rounded border-border text-primary focus:ring-primary" />
+        Remember me
+      </label>
+
+      <button type="submit" class="btn-primary w-full" [disabled]="loading()">
+        @if (loading()) {
+          Signing in...
+        } @else {
+          Sign In
+        }
+      </button>
+    </form>
+  </div>
+</div>

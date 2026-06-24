@@ -1,0 +1,84 @@
+<section class="section-padding bg-gradient-to-br from-primary/5 via-white to-primary/10 dark:from-primary/10 dark:via-secondary dark:to-primary/5">
+  <div class="container-custom text-center max-w-3xl mx-auto">
+    <span class="badge bg-primary/10 text-primary mb-4">Testimonials</span>
+    <h1 class="heading-2 mb-4">Customer Reviews</h1>
+    <p class="text-text-secondary">
+      Real experiences from customers who purchased refurbished laptops from us in HSR Layout, Bengaluru.
+    </p>
+  </div>
+</section>
+
+<section class="section-padding">
+  <div class="container-custom">
+    @if (loading()) {
+      <div class="text-center py-16 text-text-secondary">Loading reviews...</div>
+    } @else if (!allReviews().length) {
+      <app-empty-state
+        icon="rate_review"
+        title="Customer testimonials will appear here soon"
+        message="We are collecting feedback from our customers. Visit our store or contact us for references."
+      />
+      <div class="text-center mt-6">
+        <a routerLink="/contact" class="btn-primary text-sm">Contact Us</a>
+      </div>
+    } @else {
+      <div class="card p-4 md:p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-2">Search Reviews</label>
+            <input
+              class="input-field"
+              type="search"
+              placeholder="Search by name or review..."
+              [ngModel]="searchQuery()"
+              (ngModelChange)="searchQuery.set($event)"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Filter By Rating</label>
+            <select
+              class="input-field"
+              [ngModel]="ratingFilter() ?? ''"
+              (ngModelChange)="ratingFilter.set($event === '' || $event === null ? null : +$event)"
+            >
+              <option value="">All ratings</option>
+              <option [value]="5">5 stars</option>
+              <option [value]="4">4 stars</option>
+              <option [value]="3">3 stars</option>
+              <option [value]="2">2 stars</option>
+              <option [value]="1">1 star</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Sort By</label>
+            <select class="input-field" [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+              <option value="latest">Latest</option>
+              <option value="highest">Highest Rating</option>
+              <option value="lowest">Lowest Rating</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      @if (!filteredReviews().length) {
+        <p class="text-center text-text-secondary py-12">No reviews match your filters.</p>
+      } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (review of filteredReviews(); track review.id) {
+            <app-testimonial-card [review]="review" />
+          }
+        </div>
+      }
+    }
+  </div>
+</section>
+
+<section class="section-padding bg-surface dark:bg-slate-800/30">
+  <div class="container-custom text-center">
+    <h2 class="heading-3 mb-4">Ready to find your laptop?</h2>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a routerLink="/laptops" class="btn-primary text-sm">Browse Inventory</a>
+      <a routerLink="/contact" class="btn-secondary text-sm">Contact Us</a>
+    </div>
+  </div>
+</section>

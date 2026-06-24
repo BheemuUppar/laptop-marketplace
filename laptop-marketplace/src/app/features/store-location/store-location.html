@@ -1,0 +1,61 @@
+<section class="section-padding">
+  <div class="container-custom">
+    <div class="text-center mb-12">
+      <h1 class="heading-2 mb-4">Store Location</h1>
+      <p class="text-text-secondary max-w-2xl mx-auto">
+        Visit us in person to test laptops, get expert advice, and complete your purchase on the spot.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8 mb-12">
+      <div class="card p-6">
+        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+          <span class="material-icons text-primary">location_on</span>
+        </div>
+        <h2 class="font-bold mb-2">Address</h2>
+        <p class="text-text-secondary text-sm mb-4">{{ store.address }}, {{ store.city }}</p>
+        <button (click)="openDirections()" class="btn-primary text-sm py-2 w-full">
+          <span class="material-icons text-base">directions</span> Get Directions
+        </button>
+      </div>
+
+      <div class="card p-6">
+        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+          <span class="material-icons text-primary">schedule</span>
+        </div>
+        <h2 class="font-bold mb-4">Business Hours</h2>
+        <div class="space-y-2">
+          @for (hours of store.businessHours; track hours.day) {
+            <div class="flex justify-between text-sm">
+              <span>{{ hours.day }}</span>
+              <span class="text-text-secondary">{{ hours.open }} - {{ hours.close }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="card p-6">
+        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+          <span class="material-icons text-primary">contact_phone</span>
+        </div>
+        <h2 class="font-bold mb-4">Contact</h2>
+        <div class="space-y-3 text-sm">
+          <a [href]="'tel:' + store.phone" class="flex items-center gap-2 hover:text-primary">
+            <span class="material-icons text-base text-primary">phone</span>
+            {{ store.phone }}
+          </a>
+          <a [href]="'mailto:' + store.email" class="flex items-center gap-2 hover:text-primary">
+            <span class="material-icons text-base text-primary">email</span>
+            {{ store.email }}
+          </a>
+        </div>
+        <div class="flex gap-2 mt-4">
+          <button (click)="callStore()" class="btn-secondary text-sm py-2 flex-1">Call</button>
+          <button (click)="openWhatsApp()" class="btn-secondary text-sm py-2 flex-1 text-[#25D366]">WhatsApp</button>
+        </div>
+      </div>
+    </div>
+
+    <app-map-section />
+  </div>
+</section>

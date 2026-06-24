@@ -1,0 +1,99 @@
+<div>
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-text-primary dark:text-white mb-1">Inventory</h1>
+    <p class="text-text-secondary text-sm">Track and update stock levels</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+    <div class="card p-5 border-l-4 border-success">
+      <p class="text-sm text-text-secondary mb-1">In Stock</p>
+      <p class="text-2xl font-bold text-success">{{ availableProducts() }}</p>
+    </div>
+    <div class="card p-5 border-l-4 border-warning">
+      <p class="text-sm text-text-secondary mb-1">Low Stock</p>
+      <p class="text-2xl font-bold text-warning">{{ lowStockProducts() }}</p>
+    </div>
+    <div class="card p-5 border-l-4 border-danger">
+      <p class="text-sm text-text-secondary mb-1">Out of Stock</p>
+      <p class="text-2xl font-bold text-danger">{{ outOfStockProducts() }}</p>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="card p-4 mb-6 bg-danger/10 text-danger text-sm">{{ error() }}</div>
+  }
+  @if (success()) {
+    <div class="card p-4 mb-6 bg-green-50 text-success text-sm">Stock updated successfully.</div>
+  }
+
+  @if (alertProducts().length > 0) {
+    <div class="card p-5 mb-8 bg-warning/5 border-warning/30">
+      <h2 class="font-bold flex items-center gap-2 mb-3">
+        <span class="material-icons text-warning">warning</span>
+        Stock Alerts
+      </h2>
+      <div class="space-y-2">
+        @for (product of alertProducts(); track product.id) {
+          <div class="flex items-center justify-between text-sm">
+            <span>{{ product.brand }} {{ product.model }}</span>
+            <span [class]="stockBadgeClass(product.stockStatus)">{{ stockLabel(product.stockStatus, product.quantityAvailable) }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (hasPendingChanges()) {
+    <div class="card p-4 mb-6 flex flex-wrap items-center justify-between gap-4 bg-primary/5">
+      <p class="text-sm font-medium">You have unsaved quantity changes</p>
+      <div class="flex gap-3">
+        <button (click)="resetEdits()" class="btn-secondary text-sm py-2">Discard</button>
+        <button (click)="saveBulkUpdate()" class="btn-primary text-sm py-2" [disabled]="saving()">
+          {{ saving() ? 'Saving...' : 'Save All Changes' }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="card p-8 text-center text-text-secondary">Loading inventory...</div>
+  } @else {
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-surface dark:bg-slate-700/50">
+            <tr>
+              <th class="text-left p-4 font-semibold">Product</th>
+              <th class="text-left p-4 font-semibold">Current Stock</th>
+              <th class="text-left p-4 font-semibold">Status</th>
+              <th class="text-left p-4 font-semibold">Update Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of products(); track product.id) {
+              <tr class="border-t border-border">
+                <td class="p-4">
+                  <p class="font-semibold">{{ product.brand }} {{ product.model }}</p>
+                  <p class="text-xs text-text-secondary">{{ product.processor }}</p>
+                </td>
+                <td class="p-4">{{ product.quantityAvailable }}</td>
+                <td class="p-4">
+                  <span [class]="stockBadgeClass(product.stockStatus)">{{ stockLabel(product.stockStatus, product.quantityAvailable) }}</span>
+                </td>
+                <td class="p-4">
+                  <input
+                    type="number"
+                    min="0"
+                    class="input-field text-sm w-24"
+                    [ngModel]="getEditQuantity(product)"
+                    (ngModelChange)="setEditQuantity(product.id, $event)"
+                  />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

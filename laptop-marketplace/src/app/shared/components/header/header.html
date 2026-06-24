@@ -1,0 +1,72 @@
+<header class="sticky top-0 z-50 glass border-b border-border">
+  <div class="container-custom">
+    <div class="flex items-center justify-between h-16 md:h-20 px-4">
+      <!-- Logo -->
+      <a routerLink="/" class="flex items-center gap-2 group" (click)="closeMenu()">
+        <!-- <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-soft group-hover:shadow-card-hover transition-shadow">
+          <span class="material-icons text-white text-xl">laptop_mac</span>
+        </div> -->
+        <img src="/logo.svg" alt="iPro Technologies" class="h-10 w-auto object-contain">
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-1">
+        @for (link of navLinks; track link.path) {
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="text-primary bg-primary/5"
+            [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+            class="px-4 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-primary hover:bg-primary/5 transition-all"
+          >
+            {{ link.label }}
+          </a>
+        }
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <button
+          (click)="toggleTheme()"
+          class="p-2 rounded-lg hover:bg-surface dark:hover:bg-slate-700 transition-colors"
+          [attr.aria-label]="isDark() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+        >
+          <span class="material-icons text-text-secondary">
+            {{ isDark() === 'dark' ? 'light_mode' : 'dark_mode' }}
+          </span>
+        </button>
+
+        <!-- <a routerLink="/laptops" class="hidden sm:inline-flex btn-primary text-sm py-2.5 px-5">
+          Browse Inventory
+        </a> -->
+
+        <button
+          (click)="toggleMenu()"
+          class="lg:hidden p-2 rounded-lg hover:bg-surface dark:hover:bg-slate-700 transition-colors"
+          aria-label="Toggle menu"
+        >
+          <span class="material-icons">{{ mobileMenuOpen() ? 'close' : 'menu' }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav -->
+    @if (mobileMenuOpen()) {
+      <nav class="lg:hidden border-t border-border px-4 py-4 animate-fade-in">
+        @for (link of navLinks; track link.path) {
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="text-primary bg-primary/5"
+            [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+            (click)="closeMenu()"
+            class="block px-4 py-3 rounded-lg text-sm font-medium text-text-secondary hover:text-primary hover:bg-primary/5 transition-all"
+          >
+            {{ link.label }}
+          </a>
+        }
+        <!-- <a routerLink="/laptops" (click)="closeMenu()" class="block mt-2 btn-primary text-center text-sm">
+          Browse Inventory
+        </a> -->
+      </nav>
+    }
+  </div>
+</header>

@@ -1,0 +1,88 @@
+<section class="section-padding bg-gradient-to-br from-primary/5 via-white to-primary/10 dark:from-primary/10 dark:via-secondary dark:to-primary/5">
+  <div class="container-custom max-w-4xl text-center">
+    <span class="badge bg-primary/10 text-primary mb-4">HSR Layout, Bengaluru</span>
+    <h1 class="heading-2 mb-6">About iPro Technologies</h1>
+    <p class="text-lg text-text-secondary leading-relaxed">
+      iPro Technologies is a used and refurbished laptop store located in HSR Layout, Bengaluru.
+      We specialize in quality pre-owned laptops from Dell, HP, Lenovo, Apple/MacBook, and Asus —
+      with warranty options available on select models.
+    </p>
+  </div>
+</section>
+
+<section class="section-padding">
+  <div class="container-custom">
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="card p-8">
+        <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
+          <span class="material-icons text-primary text-2xl">flag</span>
+        </div>
+        <h2 class="heading-3 mb-4">What We Do</h2>
+        <p class="text-text-secondary leading-relaxed">
+          We buy, refurbish, and sell used laptops at affordable prices. Every device is checked before sale.
+          Visit our store to inspect laptops in person and get expert guidance on choosing the right model.
+        </p>
+      </div>
+      <div class="card p-8">
+        <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
+          <span class="material-icons text-primary text-2xl">verified</span>
+        </div>
+        <h2 class="heading-3 mb-4">Our Promise</h2>
+        <p class="text-text-secondary leading-relaxed">
+          Honest pricing, transparent condition grading, and warranty support where applicable.
+          No fake claims — just quality laptops and straightforward service.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-padding bg-surface dark:bg-slate-800/30">
+  <div class="container-custom">
+    <h2 class="heading-2 text-center mb-12">Why Choose Us</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (item of whyChooseUs; track item.title) {
+        <div class="card p-6">
+          <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+            <span class="material-icons text-primary">{{ item.icon }}</span>
+          </div>
+          <h3 class="font-bold mb-2">{{ item.title }}</h3>
+          <p class="text-sm text-text-secondary">{{ item.description }}</p>
+        </div>
+      }
+    </div>
+    <div class="text-center mt-10">
+      <a routerLink="/reviews" class="btn-outline text-sm">Read Customer Reviews</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-padding">
+  <div class="container-custom">
+    <h2 class="heading-2 text-center mb-12">Store Photos</h2>
+    @if (storePhotos.length) {
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        @for (photo of storePhotos; track photo.src) {
+          <img [src]="photo.src" [alt]="photo.alt" class="rounded-2xl shadow-soft w-full aspect-[4/3] object-cover" loading="lazy" />
+        }
+      </div>
+    } @else {
+      <p class="text-center text-text-secondary">Visit us at {{ store.address }}, {{ store.city }} to see our store and current stock.</p>
+    }
+  </div>
+</section>
+
+<section class="section-padding bg-primary text-white text-center">
+  <div class="container-custom">
+    <h2 class="heading-2 mb-4">Visit Our Store</h2>
+    <p class="mb-2">{{ store.address }}, {{ store.city }}</p>
+    <p class="mb-6">Open {{ store.businessHours[0].open }} – {{ store.businessHours[0].close }} daily</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      @for (phone of store.phones; track phone) {
+        <a [href]="'tel:+91' + phone" class="btn-secondary bg-white/10 border-white/20 text-white hover:bg-white hover:text-primary">
+          +91 {{ phone }}
+        </a>
+      }
+    </div>
+  </div>
+</section>

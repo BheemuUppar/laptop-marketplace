@@ -1,0 +1,256 @@
+<!-- Hero -->
+<section class="relative overflow-hidden bg-gradient-to-br from-primary/5 via-white to-primary/10 dark:from-primary/10 dark:via-secondary dark:to-primary/5">
+  <div class="container-custom section-padding">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="animate-slide-up">
+        <span class="badge bg-primary/10 text-primary mb-4">HSR Layout, Bengaluru</span>
+        <h1 class="heading-1 text-text-primary dark:text-white mb-6">
+          Used & Refurbished Laptops at <span class="text-primary">iPro Technologies</span>
+        </h1>
+        <p class="text-lg text-text-secondary mb-8 max-w-lg">
+          Quality refurbished laptops from Dell, HP, Lenovo, Apple/MacBook, and Asus.
+          Warranty available. Visit our store in HSR Layout or browse current inventory.
+        </p>
+        <div class="flex flex-wrap gap-4 mb-10">
+          <a routerLink="/laptops" class="btn-primary">Browse Inventory</a>
+          <a [href]="'https://wa.me/' + store.whatsapp" target="_blank" class="btn-secondary">WhatsApp Us</a>
+        </div>
+        <div class="grid grid-cols-2 gap-4 text-sm text-text-secondary">
+          <div class="flex items-center gap-2"><span class="material-icons text-success text-base">verified</span> Warranty Available</div>
+          <div class="flex items-center gap-2"><span class="material-icons text-success text-base">store</span> Physical Store</div>
+          <div class="flex items-center gap-2"><span class="material-icons text-success text-base">schedule</span> 10:30 AM – 8:00 PM</div>
+          <div class="flex items-center gap-2"><span class="material-icons text-success text-base">phone</span> {{ store.phones[0] }}</div>
+        </div>
+      </div>
+      <div class="relative hidden lg:block">
+        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop&q=80" alt="Refurbished laptops at iPro Technologies" class="rounded-2xl shadow-soft w-full" loading="eager" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust -->
+<section class="border-y border-border bg-surface dark:bg-slate-800/50">
+  <div class="container-custom py-8 px-4">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+      @for (badge of trustBadges; track badge.title) {
+        <div class="flex flex-col items-center text-center gap-2">
+          <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+            <span class="material-icons text-primary">{{ badge.icon }}</span>
+          </div>
+          <p class="font-semibold text-sm">{{ badge.title }}</p>
+          <p class="text-xs text-text-secondary">{{ badge.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Featured Inventory -->
+<section class="section-padding">
+  <div class="container-custom">
+    <div class="text-center mb-12">
+      <h2 class="heading-2 mb-4">Current Inventory</h2>
+      <p class="text-text-secondary">Browse our available refurbished laptops</p>
+    </div>
+    @if (loading()) {
+      <app-skeleton-loader type="card" [count]="4" />
+    } @else if (!featuredProducts().length) {
+      <app-empty-state
+        icon="inventory_2"
+        title="No laptops listed yet"
+        message="Our inventory is being updated. Visit our store in HSR Layout or contact us on WhatsApp for availability."
+      />
+      <div class="text-center mt-6 flex flex-wrap justify-center gap-4">
+        <a [href]="'https://wa.me/' + store.whatsapp" target="_blank" class="btn-primary text-sm">WhatsApp for Availability</a>
+        <a routerLink="/contact" class="btn-secondary text-sm">Contact Us</a>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @for (product of featuredProducts(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+      <div class="text-center mt-10">
+        <a routerLink="/laptops" class="btn-outline">View All Laptops</a>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Brands -->
+<section class="section-padding bg-surface dark:bg-slate-800/30">
+  <div class="container-custom">
+    <h2 class="heading-2 text-center mb-12">Brands We Sell</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+      @for (brand of brands; track brand.id) {
+        <a [routerLink]="['/laptops']" [queryParams]="{ brand: brand.name }" class="card-hover p-6 flex flex-col items-center gap-3 text-center">
+          <img [src]="brand.logo" [alt]="brand.name" class="h-8 object-contain dark:invert" loading="lazy" />
+          <span class="font-semibold text-sm">{{ brand.name }}</span>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="section-padding">
+  <div class="container-custom">
+    <h2 class="heading-2 text-center mb-12">Why Choose iPro Technologies</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (item of whyChooseUs; track item.title) {
+        <div class="card p-6">
+          <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+            <span class="material-icons text-primary">{{ item.icon }}</span>
+          </div>
+          <h3 class="heading-3 mb-2">{{ item.title }}</h3>
+          <p class="text-sm text-text-secondary">{{ item.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+@if (!reviewsLoading() && featuredReviews().length) {
+  <section class="section-padding bg-surface dark:bg-slate-800/30">
+    <div class="container-custom">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="heading-2 mb-4">What Our Customers Say</h2>
+        <p class="text-text-secondary">
+          Real experiences from customers who purchased refurbished laptops from us.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        @for (review of featuredReviews(); track review.id) {
+          <app-testimonial-card [review]="review" />
+        }
+      </div>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a routerLink="/reviews" class="btn-outline text-sm">View All Reviews</a>
+        <a routerLink="/contact" class="btn-primary text-sm">Contact Us</a>
+      </div>
+    </div>
+  </section>
+}
+
+<!-- Gallery -->
+<section class="section-padding">
+  <div class="container-custom">
+    <h2 class="heading-2 text-center mb-12">Store Gallery</h2>
+    @if (galleryImages.length) {
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        @for (img of galleryImages; track img.src) {
+          <img [src]="img.src" [alt]="img.alt" class="rounded-2xl shadow-soft w-full aspect-[4/3] object-cover" loading="lazy" />
+        }
+      </div>
+    } @else {
+      <div class="text-center py-8 text-text-secondary">
+        <span class="material-icons text-5xl mb-4 opacity-30">photo_library</span>
+        <p>Store photos coming soon. Visit us at HSR Layout to see our collection in person.</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- YouTube -->
+<section class="section-padding">
+  <div class="container-custom">
+    <h2 class="heading-2 text-center mb-12">Videos</h2>
+    @if (youtubeVideos.length) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (video of youtubeVideos; track video.videoId) {
+          <div class="card overflow-hidden">
+            <iframe
+              [src]="'https://www.youtube.com/embed/' + video.videoId"
+              class="w-full aspect-video"
+              frameborder="0"
+              allowfullscreen
+              [title]="video.title"
+            ></iframe>
+            <p class="p-4 font-semibold text-sm">{{ video.title }}</p>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="text-center py-8">
+        <p class="text-text-secondary mb-4">Follow us on YouTube for laptop reviews and store updates.</p>
+        <a [href]="store.youtubeChannelUrl" target="_blank" class="btn-outline text-sm">Visit YouTube Channel</a>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Instagram -->
+<section class="section-padding bg-surface dark:bg-slate-800/30">
+  <div class="container-custom text-center">
+    <h2 class="heading-2 mb-4">Follow Us on Instagram</h2>
+    <p class="text-text-secondary mb-8">See our latest stock, deals, and store updates</p>
+    <a [href]="store.instagramUrl" target="_blank" class="btn-primary text-sm">
+      <span class="material-icons text-base">photo_camera</span> @iPro Technologies on Instagram
+    </a>
+  </div>
+</section>
+
+<!-- Store Visit -->
+<section class="section-padding">
+  <div class="container-custom">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 class="heading-2 mb-6">Visit Our Store</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start gap-3">
+            <span class="material-icons text-primary">location_on</span>
+            <div>
+              <p class="font-semibold">{{ store.name }}</p>
+              <p class="text-text-secondary">{{ store.address }}, {{ store.city }}</p>
+            </div>
+          </div>
+          @for (phone of store.phones; track phone) {
+            <div class="flex items-center gap-3">
+              <span class="material-icons text-primary">phone</span>
+              <a [href]="'tel:+91' + phone" class="font-semibold hover:text-primary">+91 {{ phone }}</a>
+            </div>
+          }
+          @for (hours of store.businessHours; track hours.day) {
+            <div class="flex items-center gap-3 text-sm">
+              <span class="material-icons text-primary text-base">schedule</span>
+              <span>{{ hours.day }}: {{ hours.open }} – {{ hours.close }}</span>
+            </div>
+          }
+        </div>
+        <a routerLink="/store-location" class="btn-primary">Get Directions</a>
+      </div>
+      <app-map-section />
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="section-padding bg-surface dark:bg-slate-800/30">
+  <div class="container-custom max-w-2xl">
+    <h2 class="heading-2 text-center mb-2">Get In Touch</h2>
+    <p class="text-text-secondary text-center mb-8">Questions about a laptop? Send us a message.</p>
+    <div class="card p-8"><app-contact-form /></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section-padding">
+  <div class="container-custom max-w-3xl">
+    <h2 class="heading-2 text-center mb-12">FAQ</h2>
+    <div class="space-y-3">
+      @for (faq of faqItems; track faq.question; let i = $index) {
+        <div class="card overflow-hidden">
+          <button (click)="toggleFaq(i)" class="w-full flex items-center justify-between p-5 text-left font-semibold hover:bg-primary/5 transition-colors">
+            {{ faq.question }}
+            <span class="material-icons text-text-secondary transition-transform" [class.rotate-180]="openFaq() === i">expand_more</span>
+          </button>
+          @if (openFaq() === i) {
+            <div class="px-5 pb-5 text-sm text-text-secondary">{{ faq.answer }}</div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
