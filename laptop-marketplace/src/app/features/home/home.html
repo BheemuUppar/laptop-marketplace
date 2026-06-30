@@ -138,9 +138,9 @@
 <section class="section-padding">
   <div class="container-custom">
     <h2 class="heading-2 text-center mb-12">Store Gallery</h2>
-    @if (galleryImages.length) {
+    @if (galleryImages().length) {
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        @for (img of galleryImages; track img.src) {
+        @for (img of galleryImages(); track img.id) {
           <img [src]="img.src" [alt]="img.alt" class="rounded-2xl shadow-soft w-full aspect-[4/3] object-cover" loading="lazy" />
         }
       </div>
@@ -157,9 +157,9 @@
 <section class="section-padding">
   <div class="container-custom">
     <h2 class="heading-2 text-center mb-12">Videos</h2>
-    @if (youtubeVideos.length) {
+    @if (youtubeVideos().length) {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @for (video of youtubeVideos; track video.videoId) {
+        @for (video of youtubeVideos(); track video.id) {
           <div class="card overflow-hidden">
             <iframe
               [src]="'https://www.youtube.com/embed/' + video.videoId"
@@ -175,7 +175,7 @@
     } @else {
       <div class="text-center py-8">
         <p class="text-text-secondary mb-4">Follow us on YouTube for laptop reviews and store updates.</p>
-        <a [href]="store.youtubeChannelUrl" target="_blank" class="btn-outline text-sm">Visit YouTube Channel</a>
+        <a [href]="youtubeChannelUrl()" target="_blank" class="btn-outline text-sm">Visit YouTube Channel</a>
       </div>
     }
   </div>

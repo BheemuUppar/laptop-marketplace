@@ -33,6 +33,7 @@ export const routes: Routes = [
       { path: 'reviews', loadComponent: () => import('./features/admin/reviews/reviews').then(m => m.AdminReviews) },
       { path: 'reviews/new', loadComponent: () => import('./features/admin/reviews/review-form').then(m => m.ReviewForm) },
       { path: 'reviews/:id/edit', loadComponent: () => import('./features/admin/reviews/review-form').then(m => m.ReviewForm) },
+      { path: 'gallery', loadComponent: () => import('./features/admin/gallery/gallery').then(m => m.AdminGallery) },
     ],
   },
   { path: '**', redirectTo: '' },

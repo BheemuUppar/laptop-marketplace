@@ -60,9 +60,9 @@
 <section class="section-padding">
   <div class="container-custom">
     <h2 class="heading-2 text-center mb-12">Store Photos</h2>
-    @if (storePhotos.length) {
+    @if (storePhotos().length) {
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        @for (photo of storePhotos; track photo.src) {
+        @for (photo of storePhotos(); track photo.id) {
           <img [src]="photo.src" [alt]="photo.alt" class="rounded-2xl shadow-soft w-full aspect-[4/3] object-cover" loading="lazy" />
         }
       </div>

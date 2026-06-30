@@ -1,0 +1,170 @@
+<div>
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-text-primary dark:text-white mb-1">Store Gallery & Videos</h1>
+    <p class="text-text-secondary text-sm">Upload store photos to Cloudinary and add YouTube videos — no code changes needed.</p>
+  </div>
+
+  @if (error()) {
+    <div class="card p-4 mb-6 bg-danger/10 text-danger text-sm">{{ error() }}</div>
+  }
+  @if (success()) {
+    <div class="card p-4 mb-6 bg-green-50 text-success text-sm">{{ success() }}</div>
+  }
+
+  <!-- YouTube channel -->
+  <div class="card p-6 mb-8">
+    <h2 class="font-bold text-lg mb-4">YouTube Channel Link</h2>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <input
+        class="input-field text-sm flex-1"
+        [(ngModel)]="youtubeChannelUrl"
+        placeholder="https://www.youtube.com/@your-channel"
+      />
+      <button type="button" class="btn-primary text-sm py-2.5" (click)="saveSettings()" [disabled]="savingSettings()">
+        {{ savingSettings() ? 'Saving...' : 'Save Link' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Photos -->
+  <div class="card p-6 mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h2 class="font-bold text-lg">Store Photos</h2>
+        <p class="text-sm text-text-secondary">Shown on homepage gallery and About page</p>
+      </div>
+      <label class="btn-primary text-sm py-2.5 cursor-pointer">
+        <span class="material-icons text-base">cloud_upload</span>
+        {{ uploading() ? 'Uploading...' : 'Upload Photos' }}
+        <input type="file" accept="image/*" multiple class="hidden" (change)="onPhotosSelected($event)" [disabled]="uploading()" />
+      </label>
+    </div>
+
+    @if (loading()) {
+      <p class="text-text-secondary text-sm">Loading...</p>
+    } @else if (!photos().length) {
+      <p class="text-text-secondary text-sm">No photos yet. Upload store images above.</p>
+    } @else {
+      <div class="admin-table-wrap">
+        <div class="overflow-x-auto">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Caption</th>
+                <th>Order</th>
+                <th>Visible</th>
+                <th class="admin-table-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (photo of photos(); track photo.id) {
+                <tr>
+                  <td>
+                    <img [src]="photo.imageUrl" alt="" class="w-16 h-12 object-cover rounded-lg" />
+                  </td>
+                  <td>
+                    <input
+                      class="input-field text-sm"
+                      [ngModel]="photo.title"
+                      (ngModelChange)="updatePhotoTitle(photo, $event)"
+                      placeholder="Photo caption"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      class="input-field text-sm w-20"
+                      [ngModel]="photo.displayOrder"
+                      (change)="updatePhotoOrder(photo, $event)"
+                    />
+                  </td>
+                  <td>
+                    <button type="button" (click)="toggleVisible(photo)">
+                      <span [class]="photo.isVisible ? 'badge-success' : 'badge-danger'">
+                        {{ photo.isVisible ? 'Visible' : 'Hidden' }}
+                      </span>
+                    </button>
+                  </td>
+                  <td class="admin-table-actions">
+                    <button type="button" class="text-danger hover:underline" (click)="deleteItem(photo)">Delete</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Videos -->
+  <div class="card p-6">
+    <h2 class="font-bold text-lg mb-4">YouTube Videos</h2>
+    <form (ngSubmit)="addVideo()" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium mb-1">YouTube URL or Video ID</label>
+        <input
+          class="input-field text-sm"
+          [(ngModel)]="videoUrl"
+          name="videoUrl"
+          placeholder="https://www.youtube.com/watch?v=... or video ID"
+          required
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Title</label>
+        <input class="input-field text-sm" [(ngModel)]="videoTitle" name="videoTitle" placeholder="Store tour" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Display Order</label>
+        <input type="number" min="0" class="input-field text-sm" [(ngModel)]="videoOrder" name="videoOrder" />
+      </div>
+      <div class="sm:col-span-2">
+        <button type="submit" class="btn-primary text-sm py-2.5" [disabled]="addingVideo()">
+          {{ addingVideo() ? 'Adding...' : 'Add Video' }}
+        </button>
+      </div>
+    </form>
+
+    @if (!videos().length) {
+      <p class="text-text-secondary text-sm">No videos yet. Paste a YouTube link above.</p>
+    } @else {
+      <div class="admin-table-wrap">
+        <div class="overflow-x-auto">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Video</th>
+                <th>Title</th>
+                <th>Order</th>
+                <th>Visible</th>
+                <th class="admin-table-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (video of videos(); track video.id) {
+                <tr>
+                  <td class="text-sm text-text-secondary">{{ video.videoId }}</td>
+                  <td>{{ video.title || '—' }}</td>
+                  <td>{{ video.displayOrder }}</td>
+                  <td>
+                    <button type="button" (click)="toggleVisible(video)">
+                      <span [class]="video.isVisible ? 'badge-success' : 'badge-danger'">
+                        {{ video.isVisible ? 'Visible' : 'Hidden' }}
+                      </span>
+                    </button>
+                  </td>
+                  <td class="admin-table-actions">
+                    <button type="button" class="text-danger hover:underline" (click)="deleteItem(video)">Delete</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</div>

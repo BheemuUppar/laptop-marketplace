@@ -43,6 +43,7 @@ function getPublicBaseUrl(req) {
 
 function getUploadFolder(req) {
   const folder = req.body?.folder || req.query?.folder;
+  if (folder === 'gallery') return 'ipro-technologies/gallery';
   if (folder === 'reviews') return 'ipro-technologies/reviews';
   return 'ipro-technologies/products';
 }

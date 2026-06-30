@@ -34,7 +34,7 @@ export const BRANDS = [
   { id: '6', name: 'Asus', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/ASUS_Logo.svg', slug: 'asus' },
 ];
 
-/** Replace with actual store photos and video IDs when available */
+/** Fallback when API is unavailable; manage photos/videos in Admin → Gallery */
 export const GALLERY_IMAGES: { src: string; alt: string }[] = [];
 
 export const YOUTUBE_VIDEOS: { videoId: string; title: string }[] = [];

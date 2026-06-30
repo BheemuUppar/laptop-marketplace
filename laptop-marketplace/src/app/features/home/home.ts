@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product';
 import { ReviewService } from '../../core/services/review';
+import { StoreMediaService } from '../../core/services/store-media';
 import { SeoService } from '../../core/services/seo';
 import { Product } from '../../core/models/product.model';
 import { Review } from '../../core/models/review.model';
@@ -11,9 +12,8 @@ import {
   TRUST_BADGES,
   WHY_CHOOSE_US,
   STORE_INFO,
-  GALLERY_IMAGES,
-  YOUTUBE_VIDEOS,
 } from '../../core/constants/store.constants';
+import { GalleryPhoto, GalleryVideo } from '../../core/models/store-media.model';
 import { ProductCard } from '../../shared/components/product-card/product-card';
 import { ContactForm } from '../../shared/components/contact-form/contact-form';
 import { MapSection } from '../../shared/components/map-section/map-section';
@@ -30,6 +30,7 @@ import { TestimonialCard } from '../../shared/components/testimonial-card/testim
 export class Home implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly reviewService = inject(ReviewService);
+  private readonly storeMediaService = inject(StoreMediaService);
   private readonly seo = inject(SeoService);
 
   readonly store = STORE_INFO;
@@ -37,8 +38,9 @@ export class Home implements OnInit {
   readonly faqItems = FAQ_ITEMS;
   readonly trustBadges = TRUST_BADGES;
   readonly whyChooseUs = WHY_CHOOSE_US;
-  readonly galleryImages = GALLERY_IMAGES;
-  readonly youtubeVideos = YOUTUBE_VIDEOS;
+  readonly galleryImages = signal<GalleryPhoto[]>([]);
+  readonly youtubeVideos = signal<GalleryVideo[]>([]);
+  readonly youtubeChannelUrl = signal(STORE_INFO.youtubeChannelUrl);
 
   readonly featuredProducts = signal<Product[]>([]);
   readonly featuredReviews = signal<Review[]>([]);
@@ -73,6 +75,16 @@ export class Home implements OnInit {
         this.reviewsLoading.set(false);
       },
       error: () => this.reviewsLoading.set(false),
+    });
+
+    this.storeMediaService.getPublicMedia().subscribe({
+      next: media => {
+        this.galleryImages.set(media.photos);
+        this.youtubeVideos.set(media.videos);
+        if (media.youtubeChannelUrl) {
+          this.youtubeChannelUrl.set(media.youtubeChannelUrl);
+        }
+      },
     });
   }
 
