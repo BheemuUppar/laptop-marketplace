@@ -44,11 +44,15 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# Environment secrets
+# Environment secrets — never commit real credentials
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+**/.env
+**/.env.local
+**/.env.*.local
 backend/.env
+laptop-marketplace/backend/.env
 
 # Uploaded product images (local storage when Cloudinary is not configured)
 backend/uploads/
