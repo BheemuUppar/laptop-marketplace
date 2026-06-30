@@ -2,8 +2,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
-const { v2: cloudinary } = require('cloudinary');
 const auth = require('../middleware/auth');
+const { cloudinary, configureCloudinary, isCloudinaryConfigured } = require('../utils/cloudinaryConfig');
 
 const router = express.Router();
 
@@ -12,21 +12,7 @@ if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
-function useCloudinary() {
-  return !!(
-    process.env.CLOUDINARY_CLOUD_NAME &&
-    process.env.CLOUDINARY_API_KEY &&
-    process.env.CLOUDINARY_API_SECRET
-  );
-}
-
-if (useCloudinary()) {
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-  });
-}
+configureCloudinary();
 
 const fileFilter = (_req, file, cb) => {
   if (file.mimetype.startsWith('image/')) cb(null, true);
@@ -55,13 +41,19 @@ function getPublicBaseUrl(req) {
   return process.env.API_BASE_URL || `${req.protocol}://${req.get('host')}`;
 }
 
-async function uploadToCloudinary(files) {
+function getUploadFolder(req) {
+  const folder = req.body?.folder || req.query?.folder;
+  if (folder === 'reviews') return 'ipro-technologies/reviews';
+  return 'ipro-technologies/products';
+}
+
+async function uploadToCloudinary(files, folder) {
   return Promise.all(
     files.map(
       (file) =>
         new Promise((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream(
-            { folder: 'ipro-technologies/products' },
+            { folder, resource_type: 'image' },
             (err, result) => (err ? reject(err) : resolve(result.secure_url))
           );
           stream.end(file.buffer);
@@ -71,7 +63,7 @@ async function uploadToCloudinary(files) {
 }
 
 router.post('/', auth, (req, res) => {
-  const handler = useCloudinary() ? memoryUpload.array('images', 5) : diskUpload.array('images', 5);
+  const handler = isCloudinaryConfigured() ? memoryUpload.array('images', 5) : diskUpload.array('images', 5);
 
   handler(req, res, async (err) => {
     if (err) {
@@ -85,8 +77,8 @@ router.post('/', auth, (req, res) => {
 
       let urls;
 
-      if (useCloudinary()) {
-        urls = await uploadToCloudinary(req.files);
+      if (isCloudinaryConfigured()) {
+        urls = await uploadToCloudinary(req.files, getUploadFolder(req));
       } else {
         const base = getPublicBaseUrl(req);
         urls = req.files.map((f) => `${base}/uploads/products/${f.filename}`);

@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { connectMongo } = require('./utils/connectMongo');
+const { isCloudinaryConfigured } = require('./utils/cloudinaryConfig');
 
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
@@ -14,7 +15,14 @@ const adminReviewRoutes = require('./routes/adminReviews');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:4200', credentials: true }));
+app.use(
+  cors({
+    origin: (_origin, callback) => callback(null, true),
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 app.use(express.json({ limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
@@ -34,7 +42,11 @@ app.use((err, _req, res, _next) => {
 
 connectMongo()
   .then(() => {
-    app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+    const storage = isCloudinaryConfigured() ? 'Cloudinary' : 'local disk (uploads/)';
+    app.listen(PORT, () => {
+      console.log(`API running on http://localhost:${PORT}`);
+      console.log(`Image storage: ${storage}`);
+    });
   })
   .catch((err) => {
     console.error('MongoDB connection failed:', err.message);

@@ -1,33 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSelectModule } from '@angular/material/select';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatCardModule } from '@angular/material/card';
 import { ReviewService } from '../../../core/services/review';
 import { SeoService } from '../../../core/services/seo';
 
 @Component({
   selector: 'app-review-form',
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSlideToggleModule,
-    MatSelectModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatCardModule,
-  ],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './review-form.html',
   styleUrl: './review-form.scss',
 })
@@ -37,10 +16,10 @@ export class ReviewForm implements OnInit {
   private readonly router = inject(Router);
   private readonly reviewService = inject(ReviewService);
   private readonly seo = inject(SeoService);
-  private readonly snackBar = inject(MatSnackBar);
 
   readonly loading = signal(false);
   readonly saving = signal(false);
+  readonly saveError = signal('');
   readonly isEdit = signal(false);
   private reviewId = '';
 
@@ -89,8 +68,8 @@ export class ReviewForm implements OnInit {
       },
       error: () => {
         this.loading.set(false);
-        this.snackBar.open('Review not found', 'Close', { duration: 4000 });
-        this.router.navigate(['/admin/reviews']);
+        this.saveError.set('Review not found.');
+        setTimeout(() => this.router.navigate(['/admin/reviews']), 1500);
       },
     });
   }
@@ -101,10 +80,12 @@ export class ReviewForm implements OnInit {
   }
 
   save(): void {
+    this.saveError.set('');
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+
     this.saving.set(true);
     const payload = this.form.getRawValue();
     const request$ = this.isEdit()
@@ -114,14 +95,11 @@ export class ReviewForm implements OnInit {
     request$.subscribe({
       next: () => {
         this.saving.set(false);
-        this.snackBar.open(this.isEdit() ? 'Review updated successfully' : 'Review created successfully', 'Close', {
-          duration: 3000,
-        });
         this.router.navigate(['/admin/reviews']);
       },
       error: err => {
         this.saving.set(false);
-        this.snackBar.open(err.error?.message || 'Failed to save review', 'Close', { duration: 4000 });
+        this.saveError.set(err.error?.message || 'Failed to save review. Please try again.');
       },
     });
   }

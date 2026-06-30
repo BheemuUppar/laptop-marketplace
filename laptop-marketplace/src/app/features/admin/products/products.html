@@ -9,7 +9,7 @@
     </button>
   </div>
 
-  <div class="card p-4 mb-6">
+  <div class="admin-search-bar">
     <input type="text" class="input-field" placeholder="Search by brand or model..." (input)="onSearch($event)" />
   </div>
 
@@ -23,22 +23,22 @@
       <button (click)="openAddModal()" class="btn-primary text-sm">Add First Product</button>
     </div>
   } @else {
-    <div class="card overflow-hidden">
+    <div class="admin-table-wrap">
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-surface dark:bg-slate-700/50">
+        <table class="admin-table">
+          <thead>
             <tr>
-              <th class="text-left p-4 font-semibold">Product</th>
-              <th class="text-left p-4 font-semibold">Price</th>
-              <th class="text-left p-4 font-semibold">Stock</th>
-              <th class="text-left p-4 font-semibold">Available</th>
-              <th class="text-right p-4 font-semibold">Actions</th>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Available</th>
+              <th class="admin-table-actions">Actions</th>
             </tr>
           </thead>
           <tbody>
             @for (product of filteredProducts(); track product.id) {
-              <tr class="border-t border-border hover:bg-surface/50">
-                <td class="p-4">
+              <tr>
+                <td>
                   <div class="flex items-center gap-3">
                     @if (product.images[0]) {
                       <img [src]="product.images[0]" [alt]="product.model" class="w-12 h-10 object-cover rounded-lg" />
@@ -53,14 +53,14 @@
                     </div>
                   </div>
                 </td>
-                <td class="p-4 font-semibold">{{ product.sellingPrice | currency:'INR':'symbol':'1.0-0' }}</td>
-                <td class="p-4"><span [class]="stockBadgeClass(product.stockStatus)">{{ product.quantityAvailable }}</span></td>
-                <td class="p-4">
+                <td class="font-semibold">{{ product.sellingPrice | currency:'INR':'symbol':'1.0-0' }}</td>
+                <td><span [class]="stockBadgeClass(product.stockStatus)">{{ product.quantityAvailable }}</span></td>
+                <td>
                   <span [class]="product.isAvailable ? 'badge-success' : 'badge-danger'">
                     {{ product.isAvailable ? 'Yes' : 'No' }}
                   </span>
                 </td>
-                <td class="p-4 text-right whitespace-nowrap">
+                <td class="admin-table-actions">
                   <button (click)="openEditModal(product)" class="text-primary hover:underline mr-2">Edit</button>
                   <button (click)="markSold(product.id)" class="text-warning hover:underline mr-2">Sold</button>
                   <button (click)="toggleAvailability(product.id)" class="text-text-secondary hover:underline mr-2">Toggle</button>

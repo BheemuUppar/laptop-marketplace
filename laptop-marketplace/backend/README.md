@@ -8,7 +8,7 @@ Node.js + Express + MongoDB Atlas + JWT + Cloudinary
    - `MONGODB_URI` — MongoDB Atlas connection string
    - `JWT_SECRET` — long random secret
    - `ADMIN_USERNAME` / `ADMIN_PASSWORD` — initial admin credentials
-   - `CLOUDINARY_*` — Cloudinary credentials for image uploads
+   - `CLOUDINARY_URL` or `CLOUDINARY_*` — Cloudinary credentials for image uploads (recommended)
    - `FRONTEND_URL` — `http://localhost:4200` for dev
 
 2. Install and seed admin:
@@ -17,7 +17,12 @@ npm install
 npm run seed
 ```
 
-3. Start API:
+3. Migrate existing local uploads to Cloudinary (after Cloudinary is configured):
+```bash
+npm run migrate:images
+```
+
+4. Start API:
 ```bash
 npm run dev
 ```
@@ -39,7 +44,19 @@ API runs at `http://localhost:3000`
 | DELETE | `/api/products/:id` | Yes | Delete product |
 | POST | `/api/inquiries` | No | Submit inquiry |
 | GET | `/api/inquiries` | Yes | List inquiries |
-| POST | `/api/upload` | Yes | Upload images (Cloudinary) |
+| POST | `/api/upload` | Yes | Upload images (Cloudinary when configured, otherwise local disk) |
+
+## Image storage
+
+When Cloudinary env vars are set, new uploads go to `ipro-technologies/products` on Cloudinary and the returned `https://res.cloudinary.com/...` URLs are saved in MongoDB.
+
+If Cloudinary is not configured, images are stored under `backend/uploads/products/` and served from `/uploads/products/`.
+
+To move existing local product images into Cloudinary and update MongoDB URLs:
+
+```bash
+npm run migrate:images
+```
 
 ## Database Collections
 

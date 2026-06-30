@@ -22,36 +22,36 @@
   @if (loading()) {
     <div class="card p-8 text-center text-text-secondary">Loading inquiries...</div>
   } @else {
-    <div class="card overflow-hidden">
+    <div class="admin-table-wrap">
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-surface dark:bg-slate-700/50">
+        <table class="admin-table">
+          <thead>
             <tr>
-              <th class="text-left p-4 font-semibold">Customer</th>
-              <th class="text-left p-4 font-semibold">Message</th>
-              <th class="text-left p-4 font-semibold">Product</th>
-              <th class="text-left p-4 font-semibold">Date</th>
-              <th class="text-left p-4 font-semibold">Status</th>
-              <th class="text-left p-4 font-semibold">Update</th>
+              <th>Customer</th>
+              <th>Message</th>
+              <th>Product</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Update</th>
             </tr>
           </thead>
           <tbody>
             @for (inquiry of filteredInquiries(); track inquiry.id) {
-              <tr class="border-t border-border hover:bg-surface/50 dark:hover:bg-slate-700/30">
-                <td class="p-4">
+              <tr>
+                <td>
                   <p class="font-semibold">{{ inquiry.name }}</p>
                   <p class="text-xs text-text-secondary">{{ inquiry.mobile }}</p>
                   <p class="text-xs text-text-secondary">{{ inquiry.email }}</p>
                 </td>
-                <td class="p-4 max-w-xs">
+                <td class="max-w-xs">
                   <p class="text-text-secondary line-clamp-2">{{ inquiry.message }}</p>
                 </td>
-                <td class="p-4 text-text-secondary">{{ inquiry.interestedProduct ?? '—' }}</td>
-                <td class="p-4 text-text-secondary">{{ inquiry.createdAt | date:'mediumDate' }}</td>
-                <td class="p-4">
+                <td class="text-text-secondary">{{ inquiry.interestedProduct ?? '—' }}</td>
+                <td class="text-text-secondary">{{ inquiry.createdAt | date:'mediumDate' }}</td>
+                <td>
                   <span [class]="statusBadgeClass(inquiry.status)">{{ inquiry.status }}</span>
                 </td>
-                <td class="p-4">
+                <td>
                   <select
                     [ngModel]="inquiry.status"
                     (ngModelChange)="updateStatus(inquiry.id, $event)"

@@ -58,29 +58,29 @@
   @if (loading()) {
     <div class="card p-8 text-center text-text-secondary">Loading inventory...</div>
   } @else {
-    <div class="card overflow-hidden">
+    <div class="admin-table-wrap">
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-surface dark:bg-slate-700/50">
+        <table class="admin-table">
+          <thead>
             <tr>
-              <th class="text-left p-4 font-semibold">Product</th>
-              <th class="text-left p-4 font-semibold">Current Stock</th>
-              <th class="text-left p-4 font-semibold">Status</th>
-              <th class="text-left p-4 font-semibold">Update Quantity</th>
+              <th>Product</th>
+              <th>Current Stock</th>
+              <th>Status</th>
+              <th>Update Quantity</th>
             </tr>
           </thead>
           <tbody>
             @for (product of products(); track product.id) {
-              <tr class="border-t border-border">
-                <td class="p-4">
+              <tr>
+                <td>
                   <p class="font-semibold">{{ product.brand }} {{ product.model }}</p>
                   <p class="text-xs text-text-secondary">{{ product.processor }}</p>
                 </td>
-                <td class="p-4">{{ product.quantityAvailable }}</td>
-                <td class="p-4">
+                <td>{{ product.quantityAvailable }}</td>
+                <td>
                   <span [class]="stockBadgeClass(product.stockStatus)">{{ stockLabel(product.stockStatus, product.quantityAvailable) }}</span>
                 </td>
-                <td class="p-4">
+                <td>
                   <input
                     type="number"
                     min="0"
