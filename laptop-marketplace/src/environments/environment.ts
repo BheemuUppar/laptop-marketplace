@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://d9fpjvkd-3000.inc1.devtunnels.ms/api',
+  apiUrl: 'https://laptop-marketplace.onrender.com/api',
   storeName: 'iPro Technologies',
 };
