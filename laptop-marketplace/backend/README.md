@@ -116,6 +116,9 @@ npm run reset:admin-password -- --use-env
 | GET | `/api/store/media` | No | Public gallery photos & YouTube videos |
 | GET/POST/PUT/DELETE | `/api/admin/store/media/*` | Yes | Manage gallery & videos |
 | GET/POST/PUT/DELETE | `/api/admin/reviews/*` | Yes | Manage customer reviews |
+| GET | `/api/masters` | No | All active master dropdown values (grouped) |
+| GET | `/api/masters/:type` | No | Active masters for one type |
+| GET/POST/PUT/PATCH/DELETE | `/api/admin/masters/*` | Yes | Manage master data (soft delete) |
 
 ## npm scripts
 
@@ -125,7 +128,7 @@ npm run reset:admin-password -- --use-env
 | `npm run seed` | Create initial admin user (if missing) |
 | `npm run reset:admin-password` | Emergency password reset (no old password needed) |
 | `npm run seed:products` | Seed sample products |
-| `npm run seed:reviews` | Seed sample reviews |
+| `npm run seed:masters` | Seed default dropdown values (brands, processors, RAM, etc.) |
 | `npm run migrate:images` | Upload local product images to Cloudinary |
 
 ## Image storage

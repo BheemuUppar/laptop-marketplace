@@ -1,4 +1,4 @@
-export type ProductCondition = 'Excellent' | 'Good' | 'Fair';
+export type ProductCondition = string;
 export type StockStatus = 'in_stock' | 'low_stock' | 'out_of_stock';
 
 export interface Product {
@@ -14,8 +14,11 @@ export interface Product {
   displaySize: string;
   batteryHealth: number;
   condition: ProductCondition;
-  warrantyMonths: number;
-  quantityAvailable: number;
+  warranty: string;
+  os: string;
+  laptopType: string;
+  color: string;
+  warrantyMonths: number;  quantityAvailable: number;
   sellingPrice: number;
   originalPrice?: number;
   description: string;
@@ -35,6 +38,12 @@ export interface ProductFilter {
   ram?: string;
   storage?: string;
   condition?: ProductCondition;
+  graphics?: string;
+  displaySize?: string;
+  os?: string;
+  laptopType?: string;
+  color?: string;
+  warranty?: string;
   availability?: StockStatus;
   search?: string;
   sortBy?: 'price_asc' | 'price_desc' | 'newest' | 'featured';
@@ -51,6 +60,10 @@ export interface ProductFormData {
   displaySize: string;
   batteryHealth: number;
   condition: ProductCondition;
+  warranty: string;
+  os: string;
+  laptopType: string;
+  color: string;
   warrantyMonths: number;
   quantityAvailable: number;
   sellingPrice: number;
@@ -78,6 +91,10 @@ export function mapApiProduct(doc: Record<string, unknown>): Product {
     displaySize: doc['displaySize'] as string,
     batteryHealth: doc['batteryHealth'] as number,
     condition: doc['condition'] as ProductCondition,
+    warranty: (doc['warranty'] as string) ?? '',
+    os: (doc['os'] as string) ?? '',
+    laptopType: (doc['laptopType'] as string) ?? '',
+    color: (doc['color'] as string) ?? '',
     warrantyMonths: doc['warrantyMonths'] as number,
     quantityAvailable: qty,
     sellingPrice: doc['sellingPrice'] as number,

@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
+import { MasterService } from '../../core/services/master.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -8,8 +9,9 @@ import { AuthService } from '../../core/services/auth';
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.scss',
 })
-export class AdminLayout {
+export class AdminLayout implements OnInit {
   private readonly auth = inject(AuthService);
+  private readonly masterService = inject(MasterService);
 
   readonly navItems = [
     { label: 'Dashboard', path: '/admin/dashboard', icon: 'dashboard' },
@@ -18,8 +20,13 @@ export class AdminLayout {
     { label: 'Inquiries', path: '/admin/inquiries', icon: 'contact_mail' },
     { label: 'Reviews', path: '/admin/reviews', icon: 'rate_review' },
     { label: 'Gallery', path: '/admin/gallery', icon: 'photo_library' },
+    { label: 'Masters', path: '/admin/masters', icon: 'tune' },
     { label: 'Account', path: '/admin/account', icon: 'manage_accounts' },
   ];
+
+  ngOnInit(): void {
+    this.masterService.loadAll(true).subscribe();
+  }
 
   logout(): void {
     this.auth.logout();

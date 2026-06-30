@@ -1,8 +1,12 @@
 <div class="card p-5 space-y-5">
   <div class="flex items-center justify-between">
     <h3 class="font-bold text-text-primary dark:text-white">Filters</h3>
-    <button (click)="clearFilters()" class="text-sm text-primary hover:underline">Clear All</button>
+    <button type="button" (click)="clearFilters()" class="text-sm text-primary hover:underline">Clear All</button>
   </div>
+
+  @if (mastersLoading()) {
+    <p class="text-sm text-text-secondary">Loading filters...</p>
+  }
 
   <div>
     <label class="block text-sm font-medium mb-2">Search Model</label>
@@ -19,7 +23,7 @@
     <label class="block text-sm font-medium mb-2">Brand</label>
     <select [ngModel]="filter().brand ?? ''" (ngModelChange)="update('brand', $event)" class="input-field text-sm">
       <option value="">All Brands</option>
-      @for (brand of options.brands; track brand) {
+      @for (brand of masterServiceRef.brandOptions(); track brand) {
         <option [value]="brand">{{ brand }}</option>
       }
     </select>
@@ -29,7 +33,7 @@
     <label class="block text-sm font-medium mb-2">Processor</label>
     <select [ngModel]="filter().processor ?? ''" (ngModelChange)="update('processor', $event)" class="input-field text-sm">
       <option value="">All Processors</option>
-      @for (proc of options.processors; track proc) {
+      @for (proc of masterServiceRef.processorOptions(); track proc) {
         <option [value]="proc">{{ proc }}</option>
       }
     </select>
@@ -39,7 +43,7 @@
     <label class="block text-sm font-medium mb-2">RAM</label>
     <select [ngModel]="filter().ram ?? ''" (ngModelChange)="update('ram', $event)" class="input-field text-sm">
       <option value="">All RAM</option>
-      @for (ram of options.ram; track ram) {
+      @for (ram of masterServiceRef.ramOptions(); track ram) {
         <option [value]="ram">{{ ram }}</option>
       }
     </select>
@@ -49,8 +53,58 @@
     <label class="block text-sm font-medium mb-2">Storage</label>
     <select [ngModel]="filter().storage ?? ''" (ngModelChange)="update('storage', $event)" class="input-field text-sm">
       <option value="">All Storage</option>
-      @for (storage of options.storage; track storage) {
+      @for (storage of masterServiceRef.storageOptions(); track storage) {
         <option [value]="storage">{{ storage }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Graphics</label>
+    <select [ngModel]="filter().graphics ?? ''" (ngModelChange)="update('graphics', $event)" class="input-field text-sm">
+      <option value="">All Graphics</option>
+      @for (item of masterServiceRef.graphicsOptions(); track item) {
+        <option [value]="item">{{ item }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Screen Size</label>
+    <select [ngModel]="filter().displaySize ?? ''" (ngModelChange)="update('displaySize', $event)" class="input-field text-sm">
+      <option value="">All Sizes</option>
+      @for (size of masterServiceRef.screenSizeOptions(); track size) {
+        <option [value]="size">{{ size }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Operating System</label>
+    <select [ngModel]="filter().os ?? ''" (ngModelChange)="update('os', $event)" class="input-field text-sm">
+      <option value="">All OS</option>
+      @for (os of masterServiceRef.osOptions(); track os) {
+        <option [value]="os">{{ os }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Laptop Type</label>
+    <select [ngModel]="filter().laptopType ?? ''" (ngModelChange)="update('laptopType', $event)" class="input-field text-sm">
+      <option value="">All Types</option>
+      @for (type of masterServiceRef.laptopTypeOptions(); track type) {
+        <option [value]="type">{{ type }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Color</label>
+    <select [ngModel]="filter().color ?? ''" (ngModelChange)="update('color', $event)" class="input-field text-sm">
+      <option value="">All Colors</option>
+      @for (color of masterServiceRef.colorOptions(); track color) {
+        <option [value]="color">{{ color }}</option>
       }
     </select>
   </div>
@@ -59,8 +113,18 @@
     <label class="block text-sm font-medium mb-2">Condition</label>
     <select [ngModel]="filter().condition ?? ''" (ngModelChange)="update('condition', $event)" class="input-field text-sm">
       <option value="">All Conditions</option>
-      @for (cond of options.conditions; track cond) {
+      @for (cond of masterServiceRef.conditionOptions(); track cond) {
         <option [value]="cond">{{ cond }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-2">Warranty</label>
+    <select [ngModel]="filter().warranty ?? ''" (ngModelChange)="update('warranty', $event)" class="input-field text-sm">
+      <option value="">All Warranty</option>
+      @for (w of masterServiceRef.warrantyOptions(); track w) {
+        <option [value]="w">{{ w }}</option>
       }
     </select>
   </div>
@@ -82,7 +146,7 @@
       <option value="price_asc">Price: Low to High</option>
       <option value="price_desc">Price: High to Low</option>
       <option value="newest">Newest</option>
-      <option value="popular">Popular</option>
+      <option value="featured">Featured</option>
     </select>
   </div>
 </div>

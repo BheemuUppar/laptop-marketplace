@@ -36,6 +36,7 @@ See [backend/README.md](./backend/README.md) for API setup, env vars, and npm sc
 | Inquiries | `/admin/inquiries` | Customer leads |
 | Reviews | `/admin/reviews` | Testimonials |
 | Gallery | `/admin/gallery` | Store photos (Cloudinary) & YouTube videos |
+| Masters | `/admin/masters` | Manage all dropdown values (brands, RAM, etc.) |
 | Account | `/admin/account` | Change password |
 
 Gallery photos and YouTube links are managed in admin — no code changes needed when updating the website media.

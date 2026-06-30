@@ -2,9 +2,10 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
 import { ProductService } from '../../../core/services/product';
+import { MasterService } from '../../../core/services/master.service';
 import { SeoService } from '../../../core/services/seo';
-import { Product, ProductFormData, ProductCondition } from '../../../core/models/product.model';
-import { FILTER_OPTIONS } from '../../../core/constants/store.constants';
+import { Product, ProductFormData } from '../../../core/models/product.model';
+import { parseWarrantyMonths } from '../../../core/utils/master.utils';
 
 const DEFAULT_IMAGE =
   'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop&q=80';
@@ -17,6 +18,7 @@ const DEFAULT_IMAGE =
 })
 export class Products implements OnInit {
   private readonly productService = inject(ProductService);
+  private readonly masterService = inject(MasterService);
   private readonly seo = inject(SeoService);
   private readonly fb = inject(FormBuilder);
 
@@ -28,22 +30,28 @@ export class Products implements OnInit {
   readonly saving = signal(false);
   readonly uploading = signal(false);
   readonly saveError = signal('');
-  readonly options = FILTER_OPTIONS;
+  readonly mastersLoading = signal(true);
   readonly imagePreview = signal<string[]>([]);
   readonly selectedFiles = signal<File[]>([]);
+
+  readonly masterServiceRef = this.masterService;
 
   readonly form = this.fb.group({
     brand: ['', Validators.required],
     model: ['', Validators.required],
     processor: ['', Validators.required],
     generation: [''],
-    ram: [this.options.ram[0], Validators.required],
-    storage: [this.options.storage[0], Validators.required],
+    ram: ['', Validators.required],
+    storage: ['', Validators.required],
     graphics: [''],
     displaySize: ['', Validators.required],
     batteryHealth: [85, [Validators.min(0), Validators.max(100)]],
-    condition: ['Excellent' as ProductCondition, Validators.required],
-    warrantyMonths: [3, [Validators.min(0)]],
+    condition: ['', Validators.required],
+    warranty: [''],
+    os: [''],
+    laptopType: [''],
+    color: [''],
+    warrantyMonths: [0, [Validators.min(0)]],
     sellingPrice: [null as number | null, [Validators.required, Validators.min(1)]],
     originalPrice: [null as number | null],
     quantityAvailable: [1, [Validators.required, Validators.min(0)]],
@@ -54,6 +62,10 @@ export class Products implements OnInit {
 
   ngOnInit(): void {
     this.seo.update({ title: 'Manage Products', description: 'iPro Technologies product management' });
+    this.masterService.loadAll().subscribe({
+      next: () => this.mastersLoading.set(false),
+      error: () => this.mastersLoading.set(false),
+    });
     this.loadProducts();
   }
 
@@ -82,13 +94,17 @@ export class Products implements OnInit {
       model: '',
       processor: '',
       generation: '',
-      ram: this.options.ram[0],
-      storage: this.options.storage[0],
+      ram: '',
+      storage: '',
       graphics: '',
       displaySize: '',
       batteryHealth: 85,
-      condition: 'Excellent',
-      warrantyMonths: 3,
+      condition: '',
+      warranty: '',
+      os: '',
+      laptopType: '',
+      color: '',
+      warrantyMonths: 0,
       sellingPrice: null,
       originalPrice: null,
       quantityAvailable: 1,
@@ -115,6 +131,10 @@ export class Products implements OnInit {
       displaySize: product.displaySize,
       batteryHealth: product.batteryHealth,
       condition: product.condition,
+      warranty: product.warranty || '',
+      os: product.os || '',
+      laptopType: product.laptopType || '',
+      color: product.color || '',
       warrantyMonths: product.warrantyMonths,
       sellingPrice: product.sellingPrice,
       originalPrice: product.originalPrice ?? null,
@@ -185,7 +205,11 @@ export class Products implements OnInit {
         displaySize: raw.displaySize!,
         batteryHealth: Number(raw.batteryHealth) || 85,
         condition: raw.condition!,
-        warrantyMonths: Number(raw.warrantyMonths) || 0,
+        warranty: raw.warranty ?? '',
+        os: raw.os ?? '',
+        laptopType: raw.laptopType ?? '',
+        color: raw.color ?? '',
+        warrantyMonths: raw.warranty ? parseWarrantyMonths(raw.warranty) : Number(raw.warrantyMonths) || 0,
         sellingPrice: Number(raw.sellingPrice),
         originalPrice: raw.originalPrice ? Number(raw.originalPrice) : undefined,
         quantityAvailable: Number(raw.quantityAvailable),

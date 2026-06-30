@@ -37,6 +37,8 @@ export const routes: Routes = [
       { path: 'reviews/:id/edit', loadComponent: () => import('./features/admin/reviews/review-form').then(m => m.ReviewForm) },
       { path: 'gallery', loadComponent: () => import('./features/admin/gallery/gallery').then(m => m.AdminGallery) },
       { path: 'account', loadComponent: () => import('./features/admin/account/account').then(m => m.AdminAccount) },
+      { path: 'masters', loadComponent: () => import('./features/admin/masters/masters-overview/masters-overview').then(m => m.MastersOverview) },
+      { path: 'masters/:type', loadComponent: () => import('./features/admin/masters/masters-list/masters-list').then(m => m.MastersList) },
     ],
   },
   { path: '**', redirectTo: '' },

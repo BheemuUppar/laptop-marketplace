@@ -10,6 +10,7 @@
     "reset:admin-password": "node src/utils/resetAdminPassword.js",
     "seed:products": "node src/utils/seedProducts.js",
     "seed:reviews": "node src/utils/seedReviews.js",
+    "seed:masters": "node src/utils/seedMasters.js",
     "migrate:images": "node src/utils/migrateImagesToCloudinary.js"
   },
   "dependencies": {

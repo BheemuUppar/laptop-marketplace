@@ -1,0 +1,136 @@
+<div>
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+    <div>
+      <a routerLink="/admin/masters" class="inline-flex items-center gap-1 text-sm text-text-secondary hover:text-primary transition-colors mb-4">
+        <span class="material-icons text-base">arrow_back</span>
+        All Masters
+      </a>
+      <h1 class="text-2xl font-bold text-text-primary dark:text-white mb-1">{{ typeLabels[masterType()] }}</h1>
+      <p class="text-text-secondary text-sm">Add, edit, activate, or deactivate {{ typeLabels[masterType()].toLowerCase() }}.</p>
+    </div>
+    <button type="button" (click)="openAddModal()" class="btn-primary text-sm py-2.5">
+      <span class="material-icons text-base">add</span>
+      Add {{ typeSingular[masterType()] }}
+    </button>
+  </div>
+
+  @if (saveError() && !showModal()) {
+    <div class="card p-4 mb-6 bg-danger/10 text-danger text-sm">{{ saveError() }}</div>
+  }
+  @if (success()) {
+    <div class="card p-4 mb-6 bg-green-50 text-success text-sm">{{ success() }}</div>
+  }
+
+  <div class="admin-search-bar">
+    <input
+      type="text"
+      class="input-field"
+      placeholder="Search value or description..."
+      [value]="searchQuery()"
+      (input)="onSearch($event)"
+    />
+  </div>
+
+  @if (loading()) {
+    <div class="card p-8 text-center text-text-secondary">Loading...</div>
+  } @else if (!filteredItems().length) {
+    <div class="card p-12 text-center">
+      <span class="material-icons text-5xl text-text-secondary/30 mb-4">list_alt</span>
+      <h3 class="font-bold text-lg mb-2">No {{ typeLabels[masterType()].toLowerCase() }} yet</h3>
+      <p class="text-text-secondary text-sm mb-6">Add your first {{ typeSingular[masterType()].toLowerCase() }}.</p>
+      <button type="button" (click)="openAddModal()" class="btn-primary text-sm">Add {{ typeSingular[masterType()] }}</button>
+    </div>
+  } @else {
+    <div class="admin-table-wrap">
+      <div class="overflow-x-auto">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Value</th>
+              <th>Description</th>
+              <th>Order</th>
+              <th>Status</th>
+              <th class="admin-table-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of filteredItems(); track item.id) {
+              <tr>
+                <td class="font-semibold">{{ item.value }}</td>
+                <td class="text-text-secondary">{{ item.description || '—' }}</td>
+                <td>{{ item.displayOrder }}</td>
+                <td>
+                  <button type="button" (click)="toggleStatus(item)">
+                    <span [class]="item.isActive ? 'badge-success' : 'badge-danger'">
+                      {{ item.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                  </button>
+                </td>
+                <td class="admin-table-actions">
+                  <button type="button" class="text-primary hover:underline mr-2" (click)="openEditModal(item)">Edit</button>
+                  <button type="button" class="text-danger hover:underline" (click)="deactivate(item)">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+
+@if (showModal()) {
+  <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" (click)="closeModal()">
+    <div class="card p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+      <h2 class="text-xl font-bold mb-6">
+        {{ isEdit() ? 'Edit' : 'Add' }} {{ typeSingular[masterType()] }}
+      </h2>
+
+      @if (saveError()) {
+        <div class="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm">{{ saveError() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="saveMaster()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Type</label>
+          <input class="input-field text-sm bg-surface" [value]="typeSingular[masterType()]" readonly />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Value *</label>
+          <input
+            formControlName="value"
+            class="input-field text-sm"
+            [class.border-danger]="isInvalid('value')"
+            placeholder="e.g. Dell"
+          />
+          @if (isInvalid('value')) {
+            <p class="text-danger text-xs mt-1">Value is required</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Description</label>
+          <textarea formControlName="description" rows="2" class="input-field text-sm"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Display Order</label>
+          <input type="number" min="0" formControlName="displayOrder" class="input-field text-sm w-32" />
+        </div>
+
+        <label class="flex items-center gap-2 text-sm cursor-pointer">
+          <input type="checkbox" formControlName="isActive" class="rounded border-border text-primary focus:ring-primary" />
+          Active
+        </label>
+
+        <div class="flex gap-3 pt-2">
+          <button type="submit" class="btn-primary flex-1" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : isEdit() ? 'Update' : 'Add' }}
+          </button>
+          <button type="button" (click)="closeModal()" class="btn-secondary flex-1">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

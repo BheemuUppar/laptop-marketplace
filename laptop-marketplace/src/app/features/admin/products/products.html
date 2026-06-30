@@ -85,11 +85,14 @@
       }
 
       <form [formGroup]="form" (ngSubmit)="saveProduct()" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        @if (mastersLoading()) {
+          <div class="sm:col-span-2 text-sm text-text-secondary">Loading dropdown options...</div>
+        }
         <div>
           <label class="block text-sm font-medium mb-1">Brand *</label>
           <select formControlName="brand" class="input-field text-sm" [class.border-danger]="isInvalid('brand')">
             <option value="">Select brand</option>
-            @for (b of options.brands; track b) { <option [value]="b">{{ b }}</option> }
+            @for (b of masterServiceRef.brandOptions(); track b) { <option [value]="b">{{ b }}</option> }
           </select>
           @if (isInvalid('brand')) { <p class="text-danger text-xs mt-1">Brand is required</p> }
         </div>
@@ -100,7 +103,10 @@
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Processor *</label>
-          <input formControlName="processor" class="input-field text-sm" [class.border-danger]="isInvalid('processor')" />
+          <select formControlName="processor" class="input-field text-sm" [class.border-danger]="isInvalid('processor')">
+            <option value="">Select processor</option>
+            @for (p of masterServiceRef.processorOptions(); track p) { <option [value]="p">{{ p }}</option> }
+          </select>
           @if (isInvalid('processor')) { <p class="text-danger text-xs mt-1">Processor is required</p> }
         </div>
         <div>
@@ -110,23 +116,52 @@
         <div>
           <label class="block text-sm font-medium mb-1">RAM *</label>
           <select formControlName="ram" class="input-field text-sm">
-            @for (r of options.ram; track r) { <option [value]="r">{{ r }}</option> }
+            <option value="">Select RAM</option>
+            @for (r of masterServiceRef.ramOptions(); track r) { <option [value]="r">{{ r }}</option> }
           </select>
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Storage *</label>
           <select formControlName="storage" class="input-field text-sm">
-            @for (s of options.storage; track s) { <option [value]="s">{{ s }}</option> }
+            <option value="">Select storage</option>
+            @for (s of masterServiceRef.storageOptions(); track s) { <option [value]="s">{{ s }}</option> }
           </select>
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Graphics</label>
-          <input formControlName="graphics" class="input-field text-sm" />
+          <select formControlName="graphics" class="input-field text-sm">
+            <option value="">Select graphics</option>
+            @for (g of masterServiceRef.graphicsOptions(); track g) { <option [value]="g">{{ g }}</option> }
+          </select>
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1">Display Size *</label>
-          <input formControlName="displaySize" class="input-field text-sm" placeholder='e.g. 14" FHD' [class.border-danger]="isInvalid('displaySize')" />
-          @if (isInvalid('displaySize')) { <p class="text-danger text-xs mt-1">Display size is required</p> }
+          <label class="block text-sm font-medium mb-1">Screen Size *</label>
+          <select formControlName="displaySize" class="input-field text-sm" [class.border-danger]="isInvalid('displaySize')">
+            <option value="">Select screen size</option>
+            @for (size of masterServiceRef.screenSizeOptions(); track size) { <option [value]="size">{{ size }}</option> }
+          </select>
+          @if (isInvalid('displaySize')) { <p class="text-danger text-xs mt-1">Screen size is required</p> }
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Operating System</label>
+          <select formControlName="os" class="input-field text-sm">
+            <option value="">Select OS</option>
+            @for (os of masterServiceRef.osOptions(); track os) { <option [value]="os">{{ os }}</option> }
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Laptop Type</label>
+          <select formControlName="laptopType" class="input-field text-sm">
+            <option value="">Select type</option>
+            @for (type of masterServiceRef.laptopTypeOptions(); track type) { <option [value]="type">{{ type }}</option> }
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Color</label>
+          <select formControlName="color" class="input-field text-sm">
+            <option value="">Select color</option>
+            @for (color of masterServiceRef.colorOptions(); track color) { <option [value]="color">{{ color }}</option> }
+          </select>
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Battery Health (%)</label>
@@ -136,12 +171,16 @@
         <div>
           <label class="block text-sm font-medium mb-1">Condition *</label>
           <select formControlName="condition" class="input-field text-sm">
-            @for (c of options.conditions; track c) { <option [value]="c">{{ c }}</option> }
+            <option value="">Select condition</option>
+            @for (c of masterServiceRef.conditionOptions(); track c) { <option [value]="c">{{ c }}</option> }
           </select>
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1">Warranty (months)</label>
-          <input type="number" formControlName="warrantyMonths" class="input-field text-sm" />
+          <label class="block text-sm font-medium mb-1">Warranty</label>
+          <select formControlName="warranty" class="input-field text-sm">
+            <option value="">Select warranty</option>
+            @for (w of masterServiceRef.warrantyOptions(); track w) { <option [value]="w">{{ w }}</option> }
+          </select>
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Selling Price (₹) *</label>

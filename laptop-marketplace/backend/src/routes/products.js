@@ -11,7 +11,13 @@ function buildFilter(query) {
   if (query.condition) filter.condition = query.condition;
   if (query.ram) filter.ram = query.ram;
   if (query.storage) filter.storage = query.storage;
-  if (query.processor) filter.processor = new RegExp(query.processor, 'i');
+  if (query.graphics) filter.graphics = query.graphics;
+  if (query.displaySize) filter.displaySize = query.displaySize;
+  if (query.os) filter.os = query.os;
+  if (query.laptopType) filter.laptopType = query.laptopType;
+  if (query.color) filter.color = query.color;
+  if (query.warranty) filter.warranty = query.warranty;
+  if (query.processor) filter.processor = query.processor;
   if (query.search) {
     filter.$or = [
       { model: new RegExp(query.search, 'i') },
@@ -40,6 +46,8 @@ function buildSort(sortBy) {
     case 'price_asc': return { sellingPrice: 1 };
     case 'price_desc': return { sellingPrice: -1 };
     case 'featured': return { featured: -1, createdAt: -1 };
+    case 'newest': return { createdAt: -1 };
+    case 'popular': return { featured: -1, createdAt: -1 };
     default: return { createdAt: -1 };
   }
 }

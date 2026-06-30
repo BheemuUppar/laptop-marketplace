@@ -83,7 +83,7 @@
   <div class="container-custom">
     <h2 class="heading-2 text-center mb-12">Brands We Sell</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-      @for (brand of brands; track brand.id) {
+      @for (brand of brands(); track brand.id) {
         <a [routerLink]="['/laptops']" [queryParams]="{ brand: brand.name }" class="card-hover p-6 flex flex-col items-center gap-3 text-center">
           <img [src]="brand.logo" [alt]="brand.name" class="h-8 object-contain dark:invert" loading="lazy" />
           <span class="font-semibold text-sm">{{ brand.name }}</span>

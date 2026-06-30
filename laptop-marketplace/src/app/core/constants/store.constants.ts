@@ -25,14 +25,32 @@ export const STORE_INFO = {
   youtubeChannelUrl: 'https://www.youtube.com/',
 };
 
-export const BRANDS = [
-  { id: '1', name: 'Dell', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg', slug: 'dell' },
-  { id: '2', name: 'HP', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg', slug: 'hp' },
-  { id: '3', name: 'Lenovo', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/Lenovo_logo_2015.svg', slug: 'lenovo' },
-  { id: '4', name: 'Apple', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg', slug: 'apple' },
-  { id: '5', name: 'MacBook', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg', slug: 'macbook' },
-  { id: '6', name: 'Asus', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/ASUS_Logo.svg', slug: 'asus' },
-];
+/** Optional logos for brand cards — names come from Masters API */
+export const BRAND_LOGOS: Record<string, string> = {
+  dell: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg',
+  hp: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg',
+  lenovo: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/Lenovo_logo_2015.svg',
+  apple: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+  macbook: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+  asus: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/ASUS_Logo.svg',
+  acer: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Acer_2011.svg',
+  msi: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Micro-Star_International_logo.svg',
+};
+
+export const DEFAULT_BRAND_LOGO =
+  'https://upload.wikimedia.org/wikipedia/commons/9/95/Generic_Laptop_sticker.svg';
+
+/** @deprecated Use MasterService — kept empty for backward compatibility */
+export const BRANDS: { id: string; name: string; logo: string; slug: string }[] = [];
+
+/** @deprecated Use MasterService */
+export const FILTER_OPTIONS = {
+  brands: [] as string[],
+  processors: [] as string[],
+  ram: [] as string[],
+  storage: [] as string[],
+  conditions: [] as string[],
+};
 
 /** Fallback when API is unavailable; manage photos/videos in Admin → Gallery */
 export const GALLERY_IMAGES: { src: string; alt: string }[] = [];
@@ -65,10 +83,3 @@ export const WHY_CHOOSE_US = [
   { icon: 'psychology', title: 'Expert Guidance', description: 'Our team helps you find the right laptop for your needs and budget.' },
 ];
 
-export const FILTER_OPTIONS = {
-  brands: ['Dell', 'HP', 'Lenovo', 'Apple', 'MacBook', 'Asus'],
-  processors: ['Intel i3', 'Intel i5', 'Intel i7', 'Intel i9', 'Apple M1', 'Apple M2', 'Apple M3', 'AMD Ryzen 5', 'AMD Ryzen 7'],
-  ram: ['4GB', '8GB', '16GB', '32GB'],
-  storage: ['128GB SSD', '256GB SSD', '512GB SSD', '1TB SSD'],
-  conditions: ['Excellent', 'Good', 'Fair'] as const,
-};

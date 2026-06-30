@@ -47,6 +47,12 @@ export class ProductService {
     if (filter?.ram) params = params.set('ram', filter.ram);
     if (filter?.storage) params = params.set('storage', filter.storage);
     if (filter?.condition) params = params.set('condition', filter.condition);
+    if (filter?.graphics) params = params.set('graphics', filter.graphics);
+    if (filter?.displaySize) params = params.set('displaySize', filter.displaySize);
+    if (filter?.os) params = params.set('os', filter.os);
+    if (filter?.laptopType) params = params.set('laptopType', filter.laptopType);
+    if (filter?.color) params = params.set('color', filter.color);
+    if (filter?.warranty) params = params.set('warranty', filter.warranty);
     if (filter?.availability) params = params.set('availability', filter.availability);
     if (filter?.search) params = params.set('search', filter.search);
     if (filter?.sortBy) params = params.set('sortBy', filter.sortBy);

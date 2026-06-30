@@ -1,0 +1,20 @@
+<div>
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-text-primary dark:text-white mb-1">Master Data</h1>
+    <p class="text-text-secondary text-sm">Manage all dropdown values used across the store and admin forms.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="card p-8 text-center text-text-secondary">Loading master counts...</div>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      @for (type of masterTypes; track type) {
+        <a [routerLink]="['/admin/masters', type]" class="card p-5 hover:shadow-soft transition-shadow block">
+          <p class="text-text-secondary text-sm mb-1">{{ typeLabels[type] }}</p>
+          <p class="text-3xl font-bold text-primary">{{ countFor(type) }}</p>
+          <p class="text-xs text-text-secondary mt-2">Active options</p>
+        </a>
+      }
+    </div>
+  }
+</div>

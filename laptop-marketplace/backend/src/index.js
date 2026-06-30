@@ -13,6 +13,8 @@ const reviewRoutes = require('./routes/reviews');
 const adminReviewRoutes = require('./routes/adminReviews');
 const storeMediaRoutes = require('./routes/storeMedia');
 const adminStoreMediaRoutes = require('./routes/adminStoreMedia');
+const mastersRoutes = require('./routes/masters');
+const adminMastersRoutes = require('./routes/adminMasters');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +40,8 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/admin/reviews', adminReviewRoutes);
 app.use('/api/store/media', storeMediaRoutes);
 app.use('/api/admin/store/media', adminStoreMediaRoutes);
+app.use('/api/masters', mastersRoutes);
+app.use('/api/admin/masters', adminMastersRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

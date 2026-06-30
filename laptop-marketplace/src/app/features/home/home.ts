@@ -6,14 +6,15 @@ import { StoreMediaService } from '../../core/services/store-media';
 import { SeoService } from '../../core/services/seo';
 import { Product } from '../../core/models/product.model';
 import { Review } from '../../core/models/review.model';
+import { MasterService } from '../../core/services/master.service';
 import {
-  BRANDS,
   FAQ_ITEMS,
   TRUST_BADGES,
   WHY_CHOOSE_US,
   STORE_INFO,
 } from '../../core/constants/store.constants';
 import { GalleryPhoto, GalleryVideo } from '../../core/models/store-media.model';
+import { BrandCard, buildBrandCards } from '../../core/utils/master.utils';
 import { ProductCard } from '../../shared/components/product-card/product-card';
 import { ContactForm } from '../../shared/components/contact-form/contact-form';
 import { MapSection } from '../../shared/components/map-section/map-section';
@@ -31,10 +32,11 @@ export class Home implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly reviewService = inject(ReviewService);
   private readonly storeMediaService = inject(StoreMediaService);
+  private readonly masterService = inject(MasterService);
   private readonly seo = inject(SeoService);
 
   readonly store = STORE_INFO;
-  readonly brands = BRANDS;
+  readonly brands = signal<BrandCard[]>([]);
   readonly faqItems = FAQ_ITEMS;
   readonly trustBadges = TRUST_BADGES;
   readonly whyChooseUs = WHY_CHOOSE_US;
@@ -85,6 +87,10 @@ export class Home implements OnInit {
           this.youtubeChannelUrl.set(media.youtubeChannelUrl);
         }
       },
+    });
+
+    this.masterService.loadAll().subscribe({
+      next: () => this.brands.set(buildBrandCards(this.masterService.brandOptions())),
     });
   }
 
