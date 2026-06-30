@@ -1,11 +1,11 @@
 export interface User {
   id: string;
   username: string;
-  email: string;
+  email?: string;
   role: 'admin' | 'customer';
-  createdAt: string;
+  mustChangePassword?: boolean;
+  createdAt?: string;
 }
-
 export interface LoginCredentials {
   username: string;
   password: string;

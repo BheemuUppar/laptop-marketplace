@@ -1,0 +1,86 @@
+<div class="max-w-xl">
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-text-primary dark:text-white mb-1">Account</h1>
+    <p class="text-text-secondary text-sm">Update your admin login password</p>
+  </div>
+
+  <div class="card p-6 mb-6">
+    <h2 class="font-semibold mb-2">Signed in as</h2>
+    <p class="text-text-secondary text-sm">{{ auth.currentUser()?.username || 'Admin' }}</p>
+  </div>
+
+  @if (auth.mustChangePassword()) {
+    <div class="card p-4 mb-6 bg-warning/10 border border-warning/30 text-sm">
+      <p class="font-semibold text-warning mb-1">Temporary password active</p>
+      <p class="text-text-secondary">Please set a new password below before using the rest of the admin panel.</p>
+    </div>
+  }
+
+  <div class="card p-6">
+    <h2 class="font-bold text-lg mb-4">Change Password</h2>
+
+    @if (error()) {
+      <div class="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm">{{ error() }}</div>
+    }
+    @if (success()) {
+      <div class="mb-4 p-3 rounded-xl bg-green-50 text-success text-sm">{{ success() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Current Password</label>
+        <input
+          type="password"
+          formControlName="currentPassword"
+          class="input-field text-sm"
+          autocomplete="current-password"
+          [class.border-danger]="isInvalid('currentPassword')"
+        />
+        @if (isInvalid('currentPassword')) {
+          <p class="text-danger text-xs mt-1">Current password is required</p>
+        }
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">New Password</label>
+        <input
+          type="password"
+          formControlName="newPassword"
+          class="input-field text-sm"
+          autocomplete="new-password"
+          [class.border-danger]="isInvalid('newPassword')"
+        />
+        @if (isInvalid('newPassword')) {
+          <p class="text-danger text-xs mt-1">Minimum 8 characters</p>
+        }
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Confirm New Password</label>
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          class="input-field text-sm"
+          autocomplete="new-password"
+          [class.border-danger]="isInvalid('confirmPassword') || hasPasswordMismatch()"
+        />
+        @if (isInvalid('confirmPassword')) {
+          <p class="text-danger text-xs mt-1">Please confirm your new password</p>
+        } @else if (hasPasswordMismatch()) {
+          <p class="text-danger text-xs mt-1">Passwords do not match</p>
+        }
+      </div>
+
+      <button type="submit" class="btn-primary text-sm py-2.5" [disabled]="loading()">
+        {{ loading() ? 'Updating...' : 'Update Password' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="card p-6 mt-6 bg-surface/50">
+    <h2 class="font-semibold text-sm mb-2">Forgot your password?</h2>
+    <p class="text-text-secondary text-sm">
+      Contact your site administrator. They can verify your identity and issue a temporary password — your old password is never required for a reset.
+    </p>
+  </div>
+</div>

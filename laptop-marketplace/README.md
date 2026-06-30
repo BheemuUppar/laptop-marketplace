@@ -1,59 +1,82 @@
-# LaptopMarketplace
+# iPro Technologies — Used Laptops Store
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.29.
+Angular frontend + Node/Express backend for the iPro Technologies store in HSR Layout, Bengaluru.
 
-## Development server
+## Quick start
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+**Backend** (port 3000):
 
 ```bash
-ng generate component component-name
+cd backend
+cp .env.example .env   # fill in MongoDB, JWT, Cloudinary
+npm install
+npm run seed
+npm run dev
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+**Frontend** (port 4200):
 
 ```bash
-ng generate --help
+npm install
+npm start
 ```
 
-## Building
+- Store: `http://localhost:4200`
+- Admin login: `http://localhost:4200/admin/login`
 
-To build the project run:
+See [backend/README.md](./backend/README.md) for API setup, env vars, and npm scripts.
+
+## Admin panel
+
+| Section | Path | Purpose |
+|---------|------|---------|
+| Dashboard | `/admin/dashboard` | Overview |
+| Products | `/admin/products` | Add/edit laptops |
+| Inventory | `/admin/inventory` | Stock levels |
+| Inquiries | `/admin/inquiries` | Customer leads |
+| Reviews | `/admin/reviews` | Testimonials |
+| Gallery | `/admin/gallery` | Store photos (Cloudinary) & YouTube videos |
+| Account | `/admin/account` | Change password |
+
+Gallery photos and YouTube links are managed in admin — no code changes needed when updating the website media.
+
+## Password management
+
+### Owner knows their password
+
+**Admin → Account** — enter current password and set a new one.
+
+### Owner forgot their password
+
+They should contact the site administrator (you). **Their old password is never required for a reset.**
+
+Support workflow:
+
+1. Verify it's really the owner (phone, known contact, etc.)
+2. On the server, run:
 
 ```bash
-ng build
+cd backend
+npm run reset:admin-password
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+3. Share the temporary password printed in the terminal
+4. Owner logs in → **Admin → Account** → sets a new password immediately
 
-## Running unit tests
+Full details (JWT expiry, optional flags, API endpoints): **[backend/README.md](./backend/README.md#password-management)**
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Build
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
+Output: `dist/laptop-marketplace/`
 
-For end-to-end (e2e) testing, run:
+## Environment
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+| File | Purpose |
+|------|---------|
+| `src/environments/environment.ts` | Dev API URL |
+| `src/environments/environment.prod.ts` | Production API URL |
+| `backend/.env` | Secrets (never commit) |

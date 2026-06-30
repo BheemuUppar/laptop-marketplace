@@ -46,7 +46,8 @@ export class Login implements OnInit {
     this.auth.login({ username: username!, password: password!, rememberMe: !!rememberMe }).subscribe({
       next: () => {
         this.loading.set(false);
-        this.router.navigate(['/admin/dashboard']);
+        const destination = this.auth.mustChangePassword() ? '/admin/account' : '/admin/dashboard';
+        this.router.navigate([destination]);
       },
       error: () => {
         this.loading.set(false);

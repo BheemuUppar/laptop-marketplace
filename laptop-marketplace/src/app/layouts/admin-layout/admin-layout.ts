@@ -18,6 +18,7 @@ export class AdminLayout {
     { label: 'Inquiries', path: '/admin/inquiries', icon: 'contact_mail' },
     { label: 'Reviews', path: '/admin/reviews', icon: 'rate_review' },
     { label: 'Gallery', path: '/admin/gallery', icon: 'photo_library' },
+    { label: 'Account', path: '/admin/account', icon: 'manage_accounts' },
   ];
 
   logout(): void {
