@@ -25,6 +25,10 @@ export class AdminLayout implements OnInit {
   ];
 
   ngOnInit(): void {
+    if (!this.auth.hasValidSession()) {
+      this.auth.rejectInvalidSession();
+      return;
+    }
     this.masterService.loadAll(true).subscribe();
   }
 

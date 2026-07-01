@@ -11,6 +11,11 @@
     @if (error()) {
       <div class="bg-danger/10 text-danger text-sm p-3 rounded-xl mb-6">{{ error() }}</div>
     }
+    @if (sessionExpired()) {
+      <div class="bg-warning/10 text-warning text-sm p-3 rounded-xl mb-6">
+        Your session expired (30 minutes). Please sign in again.
+      </div>
+    }
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
       <div>
@@ -58,5 +63,12 @@
     <p class="text-center text-text-secondary text-xs mt-6">
       Forgot your password? Contact your site administrator — they can reset it without needing your old password.
     </p>
+
+    <div class="text-center mt-6 pt-6 border-t border-border">
+      <a routerLink="/" class="inline-flex items-center gap-1 text-sm text-text-secondary hover:text-primary transition-colors">
+        <span class="material-icons text-base">storefront</span>
+        To Store
+      </a>
+    </div>
   </div>
 </div>

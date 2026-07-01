@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { STORE_INFO } from '../../../core/constants/store.constants';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-footer',
@@ -9,8 +10,17 @@ import { STORE_INFO } from '../../../core/constants/store.constants';
   styleUrl: './footer.scss',
 })
 export class Footer {
+  private readonly auth = inject(AuthService);
+
   readonly store = STORE_INFO;
   readonly currentYear = new Date().getFullYear();
+
+  readonly adminPath = computed(() =>
+    this.auth.hasValidSession() ? '/admin/dashboard' : '/admin/login'
+  );
+  readonly adminLabel = computed(() =>
+    this.auth.hasValidSession() ? 'Admin Dashboard' : 'Admin Login'
+  );
 
   readonly quickLinks = [
     { label: 'Browse Laptops', path: '/laptops' },

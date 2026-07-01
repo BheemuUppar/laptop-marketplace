@@ -25,6 +25,15 @@
 
       <!-- Actions -->
       <div class="flex items-center gap-2">
+        <a
+          [routerLink]="adminPath()"
+          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-primary hover:bg-primary/5 transition-all"
+          [attr.title]="adminLabel()"
+        >
+          <span class="material-icons text-lg">admin_panel_settings</span>
+          <span class="hidden md:inline">{{ auth.hasValidSession() ? 'Dashboard' : 'Admin' }}</span>
+        </a>
+
         <button
           (click)="toggleTheme()"
           class="p-2 rounded-lg hover:bg-surface dark:hover:bg-slate-700 transition-colors"
@@ -63,6 +72,14 @@
             {{ link.label }}
           </a>
         }
+        <a
+          [routerLink]="adminPath()"
+          (click)="closeMenu()"
+          class="flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary hover:text-primary hover:bg-primary/5 transition-all"
+        >
+          <span class="material-icons text-lg">admin_panel_settings</span>
+          {{ adminLabel() }}
+        </a>
         <!-- <a routerLink="/laptops" (click)="closeMenu()" class="block mt-2 btn-primary text-center text-sm">
           Browse Inventory
         </a> -->

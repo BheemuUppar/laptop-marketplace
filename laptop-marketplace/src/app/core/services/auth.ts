@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginCredentials, User, AuthResponse } from '../models/user.model';
+import { isTokenExpired } from '../utils/jwt.util';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -11,8 +12,11 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly tokenKey = 'ipro_auth_token';
   private readonly userKey = 'ipro_user';
-  private readonly isAuthenticatedSignal = signal(this.hasStoredToken());
-  private readonly currentUserSignal = signal<User | null>(this.getStoredUser());
+  private readonly isAuthenticatedSignal = signal(this.hasValidStoredSession());
+  private readonly currentUserSignal = signal<User | null>(
+    this.hasValidStoredSession() ? this.getStoredUser() : null
+  );
+  private sessionRedirectPending = false;
 
   readonly isAuthenticated = this.isAuthenticatedSignal.asReadonly();
   readonly currentUser = this.currentUserSignal.asReadonly();
@@ -27,29 +31,67 @@ export class AuthService {
       })
       .pipe(
         tap(response => {
-          localStorage.removeItem(this.tokenKey);
-          localStorage.removeItem(this.userKey);
-          sessionStorage.removeItem(this.tokenKey);
-          sessionStorage.removeItem(this.userKey);
-
+          this.clearStorage();
           const storage = credentials.rememberMe ? localStorage : sessionStorage;
           storage.setItem(this.tokenKey, response.token);
           storage.setItem(this.userKey, JSON.stringify(response.user));
           this.isAuthenticatedSignal.set(true);
           this.currentUserSignal.set(response.user);
+          this.sessionRedirectPending = false;
         }),
         catchError(() => throwError(() => new Error('Invalid username or password')))
       );
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.userKey);
-    sessionStorage.removeItem(this.tokenKey);
-    sessionStorage.removeItem(this.userKey);
+    this.clearStorage();
     this.isAuthenticatedSignal.set(false);
     this.currentUserSignal.set(null);
+    this.sessionRedirectPending = false;
     this.router.navigate(['/admin/login']);
+  }
+
+  /** Clear invalid/expired session and redirect to login (once). */
+  sessionExpired(): void {
+    this.clearStorage();
+    this.isAuthenticatedSignal.set(false);
+    this.currentUserSignal.set(null);
+
+    if (this.sessionRedirectPending) return;
+    this.sessionRedirectPending = true;
+
+    const onLoginPage = this.router.url.startsWith('/admin/login');
+    const navigate = onLoginPage
+      ? Promise.resolve(true)
+      : this.router.navigate(['/admin/login'], { queryParams: { expired: '1' } });
+
+    navigate.finally(() => {
+      this.sessionRedirectPending = false;
+    });
+  }
+
+  /** Read-only check — does not redirect. */
+  hasValidSession(): boolean {
+    const token = this.readToken();
+    return !!token && !isTokenExpired(token);
+  }
+
+  /** Used by route guards when session is invalid. */
+  rejectInvalidSession(): void {
+    if (this.readToken()) {
+      this.sessionExpired();
+    } else {
+      this.clearStorage();
+      this.isAuthenticatedSignal.set(false);
+      this.currentUserSignal.set(null);
+    }
+  }
+
+  /** Used by route guards — validates JWT expiry, not just token presence. */
+  isSessionValid(): boolean {
+    if (this.hasValidSession()) return true;
+    this.rejectInvalidSession();
+    return false;
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<{ message: string; mustChangePassword?: boolean }> {
@@ -72,11 +114,26 @@ export class AuthService {
   }
 
   getToken(): string | null {
+    return this.hasValidSession() ? this.readToken() : null;
+  }
+
+  private hasValidStoredSession(): boolean {
+    if (!this.hasValidSession()) {
+      this.clearStorage();
+      return false;
+    }
+    return true;
+  }
+
+  private readToken(): string | null {
     return localStorage.getItem(this.tokenKey) || sessionStorage.getItem(this.tokenKey);
   }
 
-  private hasStoredToken(): boolean {
-    return !!(localStorage.getItem(this.tokenKey) || sessionStorage.getItem(this.tokenKey));
+  private clearStorage(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
+    sessionStorage.removeItem(this.tokenKey);
+    sessionStorage.removeItem(this.userKey);
   }
 
   private getStoredUser(): User | null {

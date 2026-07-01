@@ -5,6 +5,6 @@ import { AuthService } from '../services/auth';
 export const authGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
-  if (auth.isAuthenticated()) return true;
-  return router.createUrlTree(['/admin/login']);
+  if (auth.isSessionValid()) return true;
+  return router.createUrlTree(['/admin/login'], { queryParams: { expired: '1' } });
 };

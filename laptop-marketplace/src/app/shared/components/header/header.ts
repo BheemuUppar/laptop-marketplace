@@ -1,6 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ThemeService } from '../../../core/services/theme';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-header',
@@ -10,8 +11,16 @@ import { ThemeService } from '../../../core/services/theme';
 })
 export class Header {
   private readonly themeService = inject(ThemeService);
+  readonly auth = inject(AuthService);
   readonly mobileMenuOpen = signal(false);
   readonly isDark = this.themeService.theme;
+
+  readonly adminPath = computed(() =>
+    this.auth.hasValidSession() ? '/admin/dashboard' : '/admin/login'
+  );
+  readonly adminLabel = computed(() =>
+    this.auth.hasValidSession() ? 'Admin Dashboard' : 'Admin Login'
+  );
 
   readonly navLinks = [
     { label: 'Home', path: '/' },

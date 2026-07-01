@@ -65,7 +65,8 @@
 
     <div class="border-t border-slate-700 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
       <p class="text-sm text-slate-500">&copy; {{ currentYear }} iPro Technologies. All rights reserved.</p>
-      <div class="flex gap-4 text-sm text-slate-500">
+      <div class="flex flex-wrap gap-4 text-sm text-slate-500">
+        <a [routerLink]="adminPath()" class="hover:text-white transition-colors">{{ adminLabel() }}</a>
         <span>Privacy Policy</span>
         <span>Terms of Service</span>
       </div>
