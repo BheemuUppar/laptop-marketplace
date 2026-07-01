@@ -6,7 +6,7 @@
         All Masters
       </a>
       <h1 class="text-2xl font-bold text-text-primary dark:text-white mb-1">{{ typeLabels[masterType()] }}</h1>
-      <p class="text-text-secondary text-sm">Add, edit, activate, or deactivate {{ typeLabels[masterType()].toLowerCase() }}.</p>
+      <p class="text-text-secondary text-sm">Add, edit, activate, or delete {{ typeLabels[masterType()].toLowerCase() }}.</p>
     </div>
     <button type="button" (click)="openAddModal()" class="btn-primary text-sm py-2.5">
       <span class="material-icons text-base">add</span>
@@ -68,7 +68,7 @@
                 </td>
                 <td class="admin-table-actions">
                   <button type="button" class="text-primary hover:underline mr-2" (click)="openEditModal(item)">Edit</button>
-                  <button type="button" class="text-danger hover:underline" (click)="deactivate(item)">Delete</button>
+                  <button type="button" class="text-danger hover:underline" (click)="deleteItem(item)">Delete</button>
                 </td>
               </tr>
             }

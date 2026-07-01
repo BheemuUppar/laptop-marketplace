@@ -81,7 +81,7 @@ export class MasterApiService {
     );
   }
 
-  softDelete(id: string): Observable<{ message: string; item: Master }> {
+  delete(id: string): Observable<{ message: string; item: Master }> {
     return this.http.delete<{ message: string; item: Master }>(`${this.adminUrl}/${id}`, {
       headers: this.authHeaders(),
     });

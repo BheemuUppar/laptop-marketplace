@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Master = require('../models/Master');
 const { MASTER_TYPES, mapMaster } = require('../models/Master');
 const auth = require('../middleware/auth');
@@ -193,12 +194,15 @@ router.patch('/:id/status', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const item = await Master.findById(req.params.id);
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid master id' });
+    }
+
+    const item = await Master.findByIdAndDelete(id);
     if (!item) return res.status(404).json({ message: 'Master record not found' });
 
-    item.isActive = false;
-    await item.save();
-    res.json({ message: 'Master deactivated', item: mapMaster(item) });
+    res.json({ message: 'Master deleted', item: mapMaster(item) });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

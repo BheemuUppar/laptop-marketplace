@@ -155,16 +155,16 @@ export class MastersList implements OnInit {
     });
   }
 
-  deactivate(item: Master): void {
-    if (!confirm(`Deactivate "${item.value}"? It will be hidden from dropdowns.`)) return;
+  deleteItem(item: Master): void {
+    if (!confirm(`Delete "${item.value}" permanently? This cannot be undone.`)) return;
 
-    this.masterApi.softDelete(item.id).subscribe({
+    this.masterApi.delete(item.id).subscribe({
       next: () => {
-        this.success.set(`"${item.value}" deactivated.`);
+        this.success.set(`"${item.value}" deleted.`);
         this.afterMutation();
       },
       error: (err: { error?: { message?: string } }) => {
-        this.saveError.set(err.error?.message || 'Failed to deactivate.');
+        this.saveError.set(err.error?.message || 'Failed to delete.');
       },
     });
   }

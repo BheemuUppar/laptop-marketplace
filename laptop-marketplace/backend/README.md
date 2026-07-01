@@ -118,7 +118,7 @@ npm run reset:admin-password -- --use-env
 | GET/POST/PUT/DELETE | `/api/admin/reviews/*` | Yes | Manage customer reviews |
 | GET | `/api/masters` | No | All active master dropdown values (grouped) |
 | GET | `/api/masters/:type` | No | Active masters for one type |
-| GET/POST/PUT/PATCH/DELETE | `/api/admin/masters/*` | Yes | Manage master data (soft delete) |
+| GET/POST/PUT/PATCH/DELETE | `/api/admin/masters/*` | Yes | Manage master data (DELETE removes record) |
 
 ## npm scripts
 
